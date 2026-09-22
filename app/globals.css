@@ -127,6 +127,41 @@
   .tira::-webkit-scrollbar { display: none; }
   .tira > * { scroll-snap-align: start; }
 
+  /* Tira con foco: la foto que pasa por el centro crece y las vecinas se
+     achican. La animación va atada al scroll (animation-timeline: view),
+     así el dedo la maneja directo y no hace falta JS ni flechas en mobile.
+     Donde no exista la propiedad, la tira funciona igual, sin el efecto. */
+  .tira-viva {
+    padding-inline: clamp(0px, 14vw, 5rem);
+    padding-block: 1.5rem;
+  }
+  .tira-viva > * {
+    scroll-snap-align: center;
+    transform-origin: center bottom;
+  }
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .tira-viva > * {
+        animation: foco-tira linear both;
+        animation-timeline: view(inline);
+        animation-range: cover 0% cover 100%;
+        will-change: transform, opacity;
+      }
+    }
+  }
+  @keyframes foco-tira {
+    0%, 100% {
+      transform: scale(0.8) translateY(0.75rem);
+      opacity: 0.4;
+      box-shadow: 0 0 0 rgb(0 0 0 / 0);
+    }
+    45%, 55% {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+      box-shadow: 0 1.25rem 2.5rem rgb(0 0 0 / 0.3);
+    }
+  }
+
   .campo {
     width: 100%;
     min-height: var(--spacing-toque);

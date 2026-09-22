@@ -60,7 +60,7 @@ export function TiraFotos({ fotos, etiqueta }: { fotos: { src: string; alt: stri
       onFocusCapture={() => setQuieta(true)}
       onBlurCapture={() => setQuieta(false)}
     >
-      <div ref={pista} tabIndex={0} role="region" aria-label={etiqueta} className="tira">
+      <div ref={pista} tabIndex={0} role="region" aria-label={etiqueta} className="tira tira-viva">
         {fotos.map(({ src, alt }) => (
           <Foto key={src} src={src} alt={alt} className="rounded-foto" sizes="(min-width: 768px) 18rem, 68vw" />
         ))}
@@ -80,7 +80,7 @@ function Flecha({ lado, onClick, inactiva }: { lado: 'izquierda' | 'derecha'; on
       onClick={onClick}
       disabled={inactiva}
       aria-label={izq ? 'Foto anterior' : 'Foto siguiente'}
-      className={`absolute top-1/2 z-10 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-cal/90 text-tinta shadow-md transition hover:bg-cal disabled:pointer-events-none disabled:opacity-0 ${izq ? 'left-1' : 'right-1'}`}
+      className={`absolute top-1/2 z-10 hidden size-11 md:grid -translate-y-1/2 place-items-center rounded-full bg-cal/90 text-tinta shadow-md transition hover:bg-cal disabled:pointer-events-none disabled:opacity-0 ${izq ? 'left-1' : 'right-1'}`}
     >
       <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
         <path d={izq ? 'M15 5l-7 7 7 7' : 'M9 5l7 7-7 7'} />
