@@ -22,10 +22,46 @@
 }
 </script>
 <style>
+  :root { --ink:#1b1a17; --muted:#6f6a61; --line:rgba(27,26,23,.14); --panel:rgba(252,250,246,.92); }
   * { box-sizing: border-box; }
-  html, body { margin:0; height:100%; background:#efeae1; overflow:hidden; -webkit-text-size-adjust:100%; }
+  html, body { margin:0; height:100%; background:#efeae1; color:var(--ink); overflow:hidden;
+    font-family:"DM Sans", Helvetica, Arial, sans-serif; -webkit-text-size-adjust:100%; }
   three-d-stage:not(:defined) { visibility:hidden; }
   three-d-stage { position:fixed; inset:0; width:100%; height:100%; }
+
+  /* Panel propio de la página suelta. Embebida en el sitio queda oculto:
+     los controles los pone el componente de React. */
+  .panel[hidden] { display:none; }
+  .panel { position:fixed; left:16px; top:16px; width:252px; z-index:10;
+    background:var(--panel); backdrop-filter:blur(14px); border:1px solid var(--line);
+    border-radius:14px; box-shadow:0 10px 30px rgba(27,26,23,.12); }
+  .panel summary { display:flex; align-items:center; justify-content:space-between;
+    gap:10px; padding:13px 15px; min-height:46px; cursor:pointer; list-style:none;
+    font-size:14px; font-weight:700; letter-spacing:-.01em; }
+  .panel summary::-webkit-details-marker { display:none; }
+  .panel summary::after { content:"▾"; color:var(--muted); font-size:12px; transition:transform .2s; }
+  .panel details[open] summary::after { transform:rotate(180deg); }
+  .cuerpo { padding:0 15px 15px; display:flex; flex-direction:column; gap:8px; }
+
+  .layer { display:flex; align-items:center; gap:10px; padding:9px 10px; min-height:44px;
+    border:1px solid var(--line); border-radius:10px; background:rgba(255,255,255,.55);
+    cursor:pointer; user-select:none; font-size:13.5px; }
+  .layer input { appearance:none; width:18px; height:18px; flex:none; margin:0; border-radius:5px;
+    border:1.5px solid rgba(27,26,23,.35); background:#fff; position:relative; cursor:pointer; }
+  .layer input:checked { background:#3f5c3a; border-color:#3f5c3a; }
+  .layer input:checked::after { content:""; position:absolute; left:5px; top:1.5px; width:5px; height:10px;
+    border:2px solid #fff; border-top:0; border-left:0; transform:rotate(42deg); }
+  .layer i { font-style:normal; display:block; font-size:10px; letter-spacing:.06em;
+    color:var(--muted); text-transform:uppercase; }
+  .dims { font-size:11px; color:var(--muted); line-height:1.6; margin-top:2px; }
+
+  /* En pantallas chicas el panel es una barra abajo que arranca plegada:
+     desplegado taparía justo el modelo que se quiere ver. */
+  @media (max-width: 720px) {
+    .panel { left:10px; right:10px; top:auto; bottom:10px; width:auto;
+      max-height:60%; overflow:auto; }
+    .cuerpo { padding-bottom:max(15px, env(safe-area-inset-bottom)); }
+  }
 </style>
 </head>
 <body>
@@ -34,6 +70,18 @@
      Visor3DCarpa.tsx) y llegan por postMessage: en mobile un panel flotante sobre
      el canvas no deja ver el modelo. -->
 <three-d-stage name="espacio-camping" background="#efeae1"></three-d-stage>
+
+<aside class="panel" hidden>
+  <details id="cajaCapas">
+    <summary>Capas</summary>
+    <div class="cuerpo">
+      <label class="layer"><input type="checkbox" data-capa="deck" checked><span>Deck<i>La plataforma</i></span></label>
+      <label class="layer"><input type="checkbox" data-capa="tent" checked><span>Carpa<i>Estructura y lona</i></span></label>
+      <label class="layer"><input type="checkbox" data-capa="interior" checked><span>Interior<i>Colchón y equipo</i></span></label>
+      <p class="dims">Deck de 4,00 × 3,00 m.<br>Domo de 2,70 m de diámetro y 1,57 m de alto.</p>
+    </div>
+  </details>
+</aside>
 
 <script src="./three-d-stage.js"></script>
 <script type="module">
@@ -70,7 +118,21 @@
     }
   });
 
-  parent.postMessage({ canal: CANAL, tipo: 'listo' }, location.origin);
+  // ── Controles propios, solo cuando la página se abre sola ──────────────
+  const embebida = window.self !== window.top;
+  if (embebida) {
+    parent.postMessage({ canal: CANAL, tipo: 'listo' }, location.origin);
+  } else {
+    const panel = document.querySelector('.panel');
+    panel.hidden = false;
+    // Desplegado de entrada solo si hay lugar de sobra al costado.
+    document.getElementById('cajaCapas').open = !matchMedia('(max-width: 720px)').matches;
+    for (const casilla of panel.querySelectorAll('input[data-capa]')) {
+      casilla.addEventListener('change', () => {
+        scene.layers[casilla.dataset.capa].visible = casilla.checked;
+      });
+    }
+  }
 </script>
 </body>
 </html>

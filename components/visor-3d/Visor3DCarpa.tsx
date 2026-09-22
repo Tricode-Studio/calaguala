@@ -65,7 +65,7 @@ export function Visor3DCarpa() {
 
   return (
     <div className="mt-10">
-      <h3 className="text-h3 font-semibold">Así es tu lugar de carpa</h3>
+      <h3 className="text-cal">Así es tu lugar de carpa</h3>
       <p className="mt-2 max-w-prose text-cuerpo text-cal/75">
         Mirá el deck, la carpa y el equipo del interior en 3D. Podés girarlo, acercarte y
         encender o apagar cada capa para ver cómo está armado.

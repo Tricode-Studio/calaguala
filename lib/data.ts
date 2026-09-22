@@ -20,7 +20,7 @@ export const landingConfig: LandingConfig = {
   heroConfig: {
     titulo: 'Un lugar para bajar el ritmo.',
     subtitulo: 'Camping & Glamping en La Paloma, a pocos pasos del mar',
-    imagenFondo: F('atardecer'),
+    imagenFondo: F('portada'),
   },
   introduccion: {
     // Copy provisto por el cliente. [completar: el brief lo trae cortado con "..."]
@@ -95,7 +95,7 @@ export const landingConfig: LandingConfig = {
     metaTitle: 'Calaguala — Camping & Glamping en La Paloma, a pasos del mar',
     metaDescription:
       'Camping y glamping en La Paloma, Uruguay, a pasos de Playa Anaconda. Descansá entre naturaleza y mar. Consultá disponibilidad.',
-    ogImage: F('atardecer'),
+    ogImage: F('portada'),
   },
 };
 
@@ -270,6 +270,7 @@ export const extensiones: Extensiones = {
     descanso: [F('espaciocomun3'), F('espaciocomunfuera')],
   },
   altFotos: {
+    [F('portada')]: 'Carpa sobre un deck de madera bajo un toldo, con una hamaca paraguaya colgada entre los árboles y el sol del atardecer filtrándose entre la vegetación',
     [F('atardecer')]: 'Atardecer sobre Playa Anaconda, con el sol bajando entre nubes y la orilla mojada reflejando la luz',
     [F('carpaalfondo')]: 'Carpa bajo un árbol con una hamaca colgada, rodeada de vegetación nativa en el predio de Calaguala',
     [F('cocina')]: 'Cocina compartida de madera con anafe, pileta y una ventana que da a los árboles',
