@@ -32,6 +32,7 @@ export async function generateMetadata(): Promise<Metadata> {
       'camping frente al mar Uruguay',
     ],
     alternates: { canonical: '/' },
+    icons: { icon: '/icon.png', apple: '/apple-icon.png' },
     openGraph: {
       type: 'website',
       locale: 'es_UY',
@@ -48,7 +49,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
-  themeColor: '#22394a',
+  themeColor: '#263B2D',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

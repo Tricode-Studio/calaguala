@@ -14,6 +14,7 @@ export function JsonLd({ config, ext, alojamientos }: { config: LandingConfig; e
     description: config.seoGlobal.metaDescription,
     url: SITE_URL,
     image: new URL(config.seoGlobal.ogImage, SITE_URL).toString(),
+    logo: new URL('/logo.webp', SITE_URL).toString(),
     ...(tel.length >= 8 ? { telephone: `+${tel}` } : {}),
     address: {
       '@type': 'PostalAddress',

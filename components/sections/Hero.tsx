@@ -15,7 +15,7 @@ export function Hero({ hero, alt }: { hero: HeroConfig; alt: string }) {
   const movil = hero.imagenFondo.replace(/\.webp$/, '-movil.webp');
 
   return (
-    <section aria-labelledby="titulo-principal" className="sobre-oscuro relative isolate flex min-h-[100svh] items-end overflow-hidden bg-mar text-cal">
+    <section aria-labelledby="titulo-principal" className="sobre-oscuro relative isolate flex min-h-[72svh] md:min-h-[100svh] items-end overflow-hidden bg-mar text-cal">
       <picture>
         <source media="(max-width: 767px)" srcSet={srcSet(movil, MOVIL)} sizes="100vw" />
         <img
