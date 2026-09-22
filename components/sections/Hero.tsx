@@ -5,7 +5,7 @@ import type { HeroConfig } from '@/lib/types';
 export function Hero({ hero, alt }: { hero: HeroConfig; alt: string }) {
   return (
     <section aria-labelledby="titulo-principal" className="sobre-oscuro relative isolate flex min-h-[100svh] items-end overflow-hidden bg-mar text-cal">
-      <Image src={hero.imagenFondo} alt={alt} fill priority quality={90} sizes="100vw" className="-z-20 object-cover object-[82%_50%] md:object-[50%_62%]" />
+      <Image src={hero.imagenFondo} alt={alt} fill priority quality={80} sizes="100vw" className="-z-20 object-cover object-[82%_50%] md:object-[50%_62%]" />
       {hero.videoFondo ? (
         <video
           className="absolute inset-0 -z-20 size-full object-cover motion-reduce:hidden"
