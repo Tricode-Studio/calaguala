@@ -174,7 +174,7 @@ export function VisorInteractivo2_5D() {
     <div ref={contenedor} className="grid gap-8 lg:grid-cols-[16rem_minmax(0,1fr)] lg:items-start">
       {/* Toggles de capa */}
       <fieldset className="lg:sticky lg:top-24">
-        <legend className="mb-3 text-cal/80">Capas del predio</legend>
+        <legend className="mb-3 text-cal">Capas del predio</legend>
         <ul className="flex flex-wrap gap-2 lg:flex-col">
           {CAPAS.map((c) => (
             <li key={c.id}>
@@ -193,7 +193,7 @@ export function VisorInteractivo2_5D() {
             </li>
           ))}
         </ul>
-        <p className="mt-4 text-paso text-cal/70">Pasá el cursor o navegá con Tab por cada lugar para ver qué es.</p>
+        <p className="mt-4 text-paso text-cal">Pasá el cursor o navegá con Tab por cada lugar para ver qué es.</p>
       </fieldset>
 
       {/* Lienzo */}
@@ -273,7 +273,7 @@ export function VisorInteractivo2_5D() {
             {activo.descripcion}
           </div>
         ) : null}
-        <p className="mt-3 text-paso text-cal/60">Ilustración de referencia. La distribución exacta puede variar.</p>
+        <p className="mt-3 text-paso text-cal">Ilustración de referencia. La distribución exacta puede variar.</p>
       </div>
     </div>
   );

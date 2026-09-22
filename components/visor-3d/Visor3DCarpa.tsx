@@ -66,7 +66,7 @@ export function Visor3DCarpa() {
   return (
     <div className="mt-10">
       <h3 className="text-cal">Así es tu lugar de carpa</h3>
-      <p className="mt-2 max-w-prose text-cuerpo text-cal/75">
+      <p className="mt-2 max-w-prose text-cuerpo text-cal">
         Mirá el deck, la carpa y el equipo del interior en 3D. Podés girarlo, acercarte y
         encender o apagar cada capa para ver cómo está armado.
       </p>
@@ -83,7 +83,7 @@ export function Visor3DCarpa() {
           </div>
 
           <fieldset className="rounded-[var(--radius-foto)] border border-cal/15 bg-cal/5 p-4">
-            <legend className="px-1 text-paso font-semibold uppercase tracking-wide text-cal/70">
+            <legend className="px-1 text-paso font-semibold uppercase tracking-wide text-cal">
               Capas
             </legend>
 
@@ -101,7 +101,7 @@ export function Visor3DCarpa() {
                   />
                   <span className="leading-tight">
                     <span className="block text-cuerpo font-medium">{nombre}</span>
-                    <span className="block text-paso text-cal/60">{detalle}</span>
+                    <span className="block text-paso text-cal">{detalle}</span>
                   </span>
                 </label>
               ))}
@@ -122,7 +122,7 @@ export function Visor3DCarpa() {
               ))}
             </div>
 
-            <p className="mt-4 text-paso leading-relaxed text-cal/60">
+            <p className="mt-4 text-paso leading-relaxed text-cal">
               Deck de 4,00 × 3,00 m. Domo de 2,70 m de diámetro y 1,57 m de alto.
             </p>
           </fieldset>
@@ -138,7 +138,7 @@ export function Visor3DCarpa() {
         </div>
       )}
 
-      <p className="mt-3 text-paso text-cal/60">
+      <p className="mt-3 text-paso text-cal">
         Modelo de referencia a escala. El equipamiento puede variar según la temporada.{' '}
         <a href={RUTA} target="_blank" rel="noreferrer" className="underline underline-offset-2">
           Abrir en pantalla completa

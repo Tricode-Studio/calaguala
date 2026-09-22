@@ -6,16 +6,20 @@
  * pizarra del mar al atardecer y el lavanda del cielo.
  */
 @theme {
-  --color-cal: #f4f4f0;          /* fondo: madera pintada a la cal */
-  --color-arena: #e7dcc8;        /* superficie secundaria */
-  --color-arena-oscura: #cdbb9c;
-  --color-eucalipto: #354a3b;    /* texto destacado, CTA primario */
-  --color-eucalipto-suave: #5c7160;
-  --color-mar: #22394a;          /* fondos oscuros */
-  --color-lavanda: #cfc3dc;      /* cielo del atardecer, acentos suaves */
-  --color-sol: #e6a13c;          /* solo el disco del sol y foco sobre oscuro */
-  --color-tinta: #1d2621;        /* texto de cuerpo */
-  --color-tinta-suave: #4a554e;
+  /* Paleta definida por el cliente. Los cinco colores base van tal cual;
+     las variantes -suave / -oscura se derivan de ellos. */
+  --color-cal: #F3EFE5;          /* fondo */
+  --color-arena: #D8C8A9;        /* detalles, superficie secundaria */
+  --color-arena-oscura: #BFAC89; /* derivado: bordes sobre arena */
+  --color-eucalipto: #526B4D;    /* botones y CTA */
+  --color-eucalipto-suave: #6B8463; /* derivado: hover y apoyos */
+  --color-acento: #A76F52;       /* acentos */
+  --color-mar: #263B2D;          /* fondos oscuros (mismo tono que el texto) */
+  --color-tierra: #8A6848;       /* fondo de la sección del predio */
+  --color-lavanda: #cfc3dc;      /* cielo del atardecer en la ilustración */
+  --color-sol: #e6a13c;          /* disco del sol y foco sobre oscuro */
+  --color-tinta: #263B2D;        /* texto principal */
+  --color-tinta-suave: #4C5A4F;  /* derivado: texto secundario */
 
   --font-display: var(--font-young-serif), "Iowan Old Style", Georgia, serif;
   --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
@@ -117,9 +121,10 @@
     overflow-x: auto;
     overscroll-behavior-x: contain;
     scroll-snap-type: x mandatory;
-    scrollbar-width: thin;
-    padding-bottom: 0.75rem;
+    /* Sin barra nativa: la navegación va por las flechas. */
+    scrollbar-width: none;
   }
+  .tira::-webkit-scrollbar { display: none; }
   .tira > * { scroll-snap-align: start; }
 
   .campo {

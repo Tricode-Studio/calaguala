@@ -1,6 +1,6 @@
 import { altDe } from '@/lib/alt';
 import type { Extensiones, Introduccion as TIntro } from '@/lib/types';
-import { Foto } from '../ui/Foto';
+import { TiraFotos } from '../ui/TiraFotos';
 import { RichText } from '../ui/RichText';
 
 export function Introduccion({ intro, ext }: { intro: TIntro; ext: Extensiones }) {
@@ -15,11 +15,10 @@ export function Introduccion({ intro, ext }: { intro: TIntro; ext: Extensiones }
             Conocé el espacio
           </a>
         </div>
-        <div tabIndex={0} role="region" aria-label="Galería: playa, surf, naturaleza y atardeceres" className="tira">
-          {ext.galeriaIntroduccion.map((src) => (
-            <Foto key={src} src={src} alt={altDe(ext, src, 'Vida de playa')} className="rounded-foto" sizes="(min-width: 768px) 18rem, 68vw" />
-          ))}
-        </div>
+        <TiraFotos
+          etiqueta="Galería: playa, surf, naturaleza y atardeceres"
+          fotos={ext.galeriaIntroduccion.map((src) => ({ src, alt: altDe(ext, src, 'Vida de playa') }))}
+        />
       </div>
     </section>
   );
