@@ -18,7 +18,7 @@ export function Introduccion({ intro, ext }: { intro: TIntro; ext: Extensiones }
         sizes="100vw"
         className="-z-20 object-cover object-center"
       />
-      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-cal/90" />
+      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-gradient-to-r from-cal/78 via-cal/78 to-cal/78 md:from-cal/80 md:via-cal/70 md:to-cal/55" />
       <div className="contenedor grid gap-12 md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] md:items-center">
         <div>
           <h2 id="h-introduccion">{titulo}</h2>
