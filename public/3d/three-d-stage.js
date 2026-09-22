@@ -214,12 +214,19 @@
       // preserveDrawingBuffer keeps the last frame readable after
       // compositing (toDataURL / drawImage) — it's what lets the
       // screenshot tools capture the scene instead of a blank canvas.
+      // Teléfonos: menos resolución de sombra, menor pixel ratio y sin
+      // preserveDrawingBuffer (solo lo necesitan las capturas de escritorio).
+      const liviano =
+        matchMedia('(pointer: coarse)').matches || innerWidth <= 820;
+      this._liviano = liviano;
       const renderer = new THREE.WebGLRenderer({
         antialias: true,
         alpha: true,
-        preserveDrawingBuffer: true,
+        preserveDrawingBuffer: !liviano,
       });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setPixelRatio(
+        Math.min(window.devicePixelRatio || 1, liviano ? 1.75 : 2)
+      );
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFShadowMap;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -266,7 +273,7 @@
       const key = new THREE.DirectionalLight(0xfff6ea, 2.6);
       key.position.set(4, 7, 5);
       key.castShadow = true;
-      key.shadow.mapSize.set(2048, 2048);
+      key.shadow.mapSize.set(liviano ? 1024 : 2048, liviano ? 1024 : 2048);
       key.shadow.radius = 3;
       key.shadow.bias = -0.0002;
       key.shadow.normalBias = 0.02;
@@ -298,6 +305,22 @@
         renderer.setSize(w, h);
         camera.aspect = w / h;
         camera.updateProjectionMatrix();
+        // El encuadre depende del aspect: al angostarse hay que alejarse.
+        // Se conserva el zoom relativo que haya elegido quien mira.
+        if (this._radio) {
+          const previo = this._distanciaEncuadre || 1;
+          const nueva = this._distanciaDeEncuadre(this._radio);
+          this._distanciaEncuadre = nueva;
+          const dir = camera.position.clone().sub(controls.target);
+          const actual = dir.length() || nueva;
+          camera.position
+            .copy(controls.target)
+            .add(dir.normalize().multiplyScalar(actual * (nueva / previo)));
+          camera.near = Math.max(nueva / 100, 0.01);
+          camera.far = nueva * 100;
+          camera.updateProjectionMatrix();
+          controls.update();
+        }
       };
       fit();
       this._ro = new ResizeObserver(fit);
@@ -343,8 +366,9 @@
         // Rest the object on the ground without moving its origin.
         this._ground.position.y = box.min.y;
         const sphere = box.getBoundingSphere(new THREE.Sphere());
-        const dist =
-          (sphere.radius / Math.tan((this._camera.fov * Math.PI) / 360)) * 1.35;
+        this._radio = sphere.radius;
+        const dist = this._distanciaDeEncuadre(sphere.radius);
+        this._distanciaEncuadre = dist;
         const dir = new THREE.Vector3(1, 0.55, 1.25).normalize();
         this._camera.position
           .copy(sphere.center)
@@ -363,6 +387,15 @@
       }
       this._scene.add(object);
       this._setButtonsEnabled(true);
+    }
+
+    /** Distancia de cámara que mete una esfera de radio `radio` en cuadro.
+     *  Usa el menor de los dos campos de visión: con el fov vertical solo,
+     *  una pantalla en vertical (aspect < 1) recorta el objeto de costado. */
+    _distanciaDeEncuadre(radio) {
+      const fovV = (this._camera.fov * Math.PI) / 180;
+      const fovH = 2 * Math.atan(Math.tan(fovV / 2) * this._camera.aspect);
+      return (radio / Math.tan(Math.min(fovV, fovH) / 2)) * 1.2;
     }
 
     get _basename() {
