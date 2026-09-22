@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Zona de carpa en 3D — Calaguala Camp</title>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.184.0/build/three.module.js",
+    "three/addons/controls/OrbitControls.js": "https://unpkg.com/three@0.184.0/examples/jsm/controls/OrbitControls.js",
+    "three/addons/exporters/OBJExporter.js": "https://unpkg.com/three@0.184.0/examples/jsm/exporters/OBJExporter.js",
+    "three/addons/exporters/GLTFExporter.js": "https://unpkg.com/three@0.184.0/examples/jsm/exporters/GLTFExporter.js"
+  },
+  "integrity": {
+    "https://unpkg.com/three@0.184.0/build/three.module.js": "sha384-8FCZ1eVO6it4+pbec2aDtnTrwjWXZLJRC+MAGCIPDgsYnUrl/E0A2YlF8ioMKI/J",
+    "https://unpkg.com/three@0.184.0/build/three.core.js": "sha384-dw2ooPewaEIrAgl6oFDBmmBWCE9oW9LxRGcfwZ0hLvEprzo202wXl7vCYHRlSnOT",
+    "https://unpkg.com/three@0.184.0/examples/jsm/controls/OrbitControls.js": "sha384-4rziNxOBZKQ69i+w+f89KJ55TCYquwchVbByQwmaOeIOXdOU2PLDn3kOfXHwIJC9",
+    "https://unpkg.com/three@0.184.0/examples/jsm/exporters/OBJExporter.js": "sha384-nbwtoZENJD3Vq+ACK0CuGQdPMuDWHkamC2KJD70EV5nfg6jQjfppKOea07YJN+N3",
+    "https://unpkg.com/three@0.184.0/examples/jsm/exporters/GLTFExporter.js": "sha384-VofkvpG6HERhFCYbsUOHeNXBCqID2nfqkQqnVzE1jc/oPcz+qJ13ADdXH08hE+cQ"
+  }
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#1b1a17; --muted:#6f6a61; --line:rgba(27,26,23,.14); --panel:rgba(252,250,246,.88); }
+  * { box-sizing: border-box; }
+  html, body { margin:0; height:100%; background:#efeae1; color:var(--ink);
+    font-family:"DM Sans", Helvetica, Arial, sans-serif; -webkit-text-size-adjust:100%; }
+  a, a:hover { color:#7a5c3a; }
+  three-d-stage:not(:defined) { visibility:hidden; }
+  three-d-stage { position:fixed; inset:0; width:100%; height:100%; }
+
+  .panel { position:fixed; left:16px; top:16px; width:268px; z-index:10;
+    background:var(--panel); backdrop-filter:blur(14px); border:1px solid var(--line);
+    border-radius:14px; padding:16px; box-shadow:0 10px 30px rgba(27,26,23,.12);
+    display:flex; flex-direction:column; gap:14px; max-height:calc(100% - 32px); overflow:auto; }
+  .title { font-size:15px; font-weight:700; letter-spacing:-.01em; }
+  .title small { display:block; font-family:"DM Mono", monospace; font-size:10.5px;
+    font-weight:400; color:var(--muted); letter-spacing:.06em; text-transform:uppercase; margin-top:4px; }
+  .group { display:flex; flex-direction:column; gap:8px; }
+  .label { font-family:"DM Mono", monospace; font-size:10px; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--muted); }
+
+  .layer { display:flex; align-items:center; gap:10px; padding:9px 10px; min-height:44px;
+    border:1px solid var(--line); border-radius:10px; background:rgba(255,255,255,.5);
+    cursor:pointer; user-select:none; font-size:13.5px; transition:background .15s, border-color .15s; }
+  .layer:hover { background:#fff; }
+  .layer input { appearance:none; width:18px; height:18px; flex:none; margin:0; border-radius:5px;
+    border:1.5px solid rgba(27,26,23,.35); background:#fff; position:relative; cursor:pointer; }
+  .layer input:checked { background:#3f5c3a; border-color:#3f5c3a; }
+  .layer input:checked::after { content:""; position:absolute; left:5px; top:1.5px; width:5px; height:10px;
+    border:2px solid #fff; border-top:0; border-left:0; transform:rotate(42deg); }
+  .layer span b { font-weight:500; }
+  .layer span i { font-style:normal; display:block; font-family:"DM Mono", monospace;
+    font-size:9.5px; letter-spacing:.08em; color:var(--muted); text-transform:uppercase; }
+
+  .row { display:flex; gap:6px; flex-wrap:wrap; }
+  .chip { flex:1 1 auto; min-height:38px; padding:8px 10px; font:inherit; font-size:12.5px;
+    border:1px solid var(--line); border-radius:9px; background:rgba(255,255,255,.5);
+    color:var(--ink); cursor:pointer; transition:background .15s, color .15s, border-color .15s; }
+  .chip:hover { background:#fff; }
+  .chip[aria-pressed="true"] { background:var(--ink); border-color:var(--ink); color:#fcfaf6; }
+  .dims { font-family:"DM Mono", monospace; font-size:10.5px; color:var(--muted); line-height:1.6; }
+
+  @media (max-width: 720px) {
+    .panel { left:10px; right:10px; top:auto; bottom:10px; width:auto;
+      max-height:52vh; padding:14px; padding-bottom:max(14px, env(safe-area-inset-bottom)); }
+    .layer { min-height:46px; }
+  }
+</style>
+</head>
+<body>
+
+<three-d-stage name="espacio-camping" background="#efeae1"></three-d-stage>
+
+<aside class="panel">
+  <div class="title">Espacio de camping<small>Armado por capas</small></div>
+
+  <div class="group">
+    <div class="label">Capas</div>
+    <label class="layer"><input type="checkbox" id="l0" checked><span><b>Deck</b><i>Capa 0 · plataforma</i></span></label>
+    <label class="layer"><input type="checkbox" id="l1" checked><span><b>Carpa</b><i>Capa 1 · estructura</i></span></label>
+    <label class="layer"><input type="checkbox" id="l2" checked><span><b>Interior</b><i>Capa 2 · colchón y equipo</i></span></label>
+    <div class="row">
+      <button class="chip" data-preset="0">Solo deck</button>
+      <button class="chip" data-preset="1">+ Carpa</button>
+      <button class="chip" data-preset="2">Todo</button>
+    </div>
+  </div>
+
+  <div class="dims" id="dims"></div>
+</aside>
+
+<script src="./three-d-stage.js"></script>
+<script type="module">
+  import { buildScene } from './camping-layers.js';
+
+  const stage = document.querySelector('three-d-stage');
+  await stage.ready;
+  const scene = buildScene();
+  stage.setObject(scene.root);
+
+  // Visor público: la barra de exportar (OBJ/GLB) es una herramienta de autor.
+  const shadowCss = document.createElement('style');
+  shadowCss.textContent = `
+    .toolbar { display: none; }
+    .note { font-size: 11.5px; left: 14px; bottom: 14px; }
+  `;
+  stage.shadowRoot.appendChild(shadowCss);
+  const note = stage.shadowRoot.querySelector('.note');
+  if (note) note.textContent = 'Arrastrá para girar · rueda para acercar · botón derecho para desplazar';
+
+  const dims = document.getElementById('dims');
+  dims.style.whiteSpace = 'pre-line';
+  dims.textContent = 'Deck 4,00 × 3,00 m · apoyado sobre la tierra\nPiso a 0,16 m · domo Ø 2,70 m · alto 1,57 m';
+
+  const boxes = [document.getElementById('l0'), document.getElementById('l1'), document.getElementById('l2')];
+  const keys = ['deck', 'tent', 'interior'];
+  const sync = () => boxes.forEach((b, i) => { scene.layers[keys[i]].visible = b.checked; });
+  boxes.forEach(b => b.addEventListener('change', sync));
+
+  document.querySelectorAll('[data-preset]').forEach(btn => btn.addEventListener('click', () => {
+    const n = +btn.dataset.preset;
+    boxes.forEach((b, i) => { b.checked = i <= n; });
+    sync();
+  }));
+</script>
+</body>
+</html>

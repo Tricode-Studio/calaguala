@@ -1,0 +1,142 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens — paleta sacada de las fotos del predio:
+ * tablas pintadas a la cal, arena del piso, eucalipto/olivo,
+ * pizarra del mar al atardecer y el lavanda del cielo.
+ */
+@theme {
+  --color-cal: #f4f4f0;          /* fondo: madera pintada a la cal */
+  --color-arena: #e7dcc8;        /* superficie secundaria */
+  --color-arena-oscura: #cdbb9c;
+  --color-eucalipto: #354a3b;    /* texto destacado, CTA primario */
+  --color-eucalipto-suave: #5c7160;
+  --color-mar: #22394a;          /* fondos oscuros */
+  --color-lavanda: #cfc3dc;      /* cielo del atardecer, acentos suaves */
+  --color-sol: #e6a13c;          /* solo el disco del sol y foco sobre oscuro */
+  --color-tinta: #1d2621;        /* texto de cuerpo */
+  --color-tinta-suave: #4a554e;
+
+  --font-display: var(--font-young-serif), "Iowan Old Style", Georgia, serif;
+  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+
+  /* Escala tipográfica (tercera mayor, 1.25) */
+  --text-paso: 0.875rem;
+  --text-cuerpo: 1.0625rem;
+  --text-lead: 1.25rem;
+  --text-h3: 1.5625rem;
+  --text-h2: clamp(1.95rem, 1.4rem + 2.2vw, 3.05rem);
+  --text-h1: clamp(2.6rem, 1.6rem + 5vw, 5.4rem);
+
+  --radius-foto: 1.25rem;
+  --radius-control: 0.75rem;
+
+  --spacing-seccion: clamp(4.5rem, 3rem + 6vw, 8.5rem);
+  --spacing-toque: 2.75rem; /* 44px: área táctil mínima */
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--color-cal);
+    color: var(--color-tinta);
+    font-family: var(--font-sans);
+    font-size: var(--text-cuerpo);
+    line-height: 1.6;
+    overflow-x: clip;
+  }
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    line-height: 1.1;
+    text-wrap: balance;
+    color: var(--color-eucalipto);
+  }
+  h2 { font-size: var(--text-h2); letter-spacing: -0.01em; }
+  h3 { font-size: var(--text-h3); }
+  p { text-wrap: pretty; }
+
+  :focus-visible {
+    outline: 3px solid var(--color-mar);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  .sobre-oscuro :focus-visible { outline-color: var(--color-sol); }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .contenedor {
+    width: 100%;
+    max-width: 76rem;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 4vw, 2.5rem);
+  }
+  .seccion { padding-block: var(--spacing-seccion); }
+
+  .prosa { max-width: 62ch; }
+  .prosa p + p { margin-top: 1em; }
+  .prosa a { text-decoration: underline; text-underline-offset: 3px; }
+
+  .boton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: var(--spacing-toque);
+    padding: 0.75rem 1.4rem;
+    border-radius: 999px;
+    font-weight: 600;
+    line-height: 1.2;
+    transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
+  }
+  .boton:active { transform: translateY(1px); }
+  .boton-primario { background: var(--color-eucalipto); color: var(--color-cal); }
+  .boton-primario:hover { background: var(--color-mar); }
+  .boton-secundario { box-shadow: inset 0 0 0 1.5px currentColor; }
+  .boton-secundario:hover { background: color-mix(in srgb, currentColor 10%, transparent); }
+  .boton:disabled { opacity: 0.55; cursor: not-allowed; }
+
+  /* Tira horizontal de fotos verticales (el banco del predio es todo retrato) */
+  .tira {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: min(68%, 17rem);
+    gap: 0.75rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    padding-bottom: 0.75rem;
+  }
+  .tira > * { scroll-snap-align: start; }
+
+  .campo {
+    width: 100%;
+    min-height: var(--spacing-toque);
+    padding: 0.7rem 0.9rem;
+    border-radius: var(--radius-control);
+    background: #fff;
+    border: 1.5px solid var(--color-arena-oscura);
+    color: var(--color-tinta);
+  }
+  .campo:focus-visible { outline-offset: 1px; border-color: var(--color-mar); }
+  .campo[aria-invalid="true"] { border-color: #a4372c; }
+  .mensaje-error { color: #9a2f25; font-size: var(--text-paso); margin-top: 0.35rem; }
+}
+
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}

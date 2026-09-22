@@ -1,0 +1,12 @@
+node_modules
+.next
+.env*
+!.env.example
+*.tsbuildinfo
+
+.vercel
+
+# Restos del armado del modelo 3D (capturas y archivos pegados)
+shots
+uploads
+.thumbnail
