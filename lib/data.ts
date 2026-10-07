@@ -192,13 +192,15 @@ export const preguntasFrecuentes: PreguntaFrecuente[] = [
 // Ejemplos de forma. [completar: las recomendaciones reales las carga el equipo]
 // Lista de lugares provista por el cliente.
 // [completar: las descripciones y fotos las carga el equipo]
+// Descripciones provistas por el cliente.
 export const recomendaciones: Recomendacion[] = [
   {
     id: 'rec-playa-anaconda',
     slug: 'playa-anaconda',
     nombre: 'Playa Anaconda',
     tipo: 'playa',
-    descripcion: 'La playa que tenemos a pocos pasos. Buena para caminar la orilla temprano y quedarse al atardecer.',
+    descripcion:
+      'Más agreste y natural, se extiende hacia el este de La Paloma. Es una playa amplia, de arena dorada y horizonte abierto, donde se siente especialmente la presencia del océano. Es una zona ideal para quienes buscan tranquilidad, naturaleza y largas caminatas junto al mar. Es también la playa que tenemos a pocos pasos de Calaguala.',
     imagen: F('playaanaconda3'),
     imagenes: [F('playaanaconda3'), F('playaanaconda1'), F('playanaconda')],
     orden: 1,
@@ -208,27 +210,30 @@ export const recomendaciones: Recomendacion[] = [
     slug: 'playa-la-balconada',
     nombre: 'Playa La Balconada',
     tipo: 'playa',
-    descripcion: '[completar: recomendación del equipo]',
+    descripcion:
+      'Una de las playas más conocidas de La Paloma y un clásico para disfrutar del atardecer. Su costa abierta al océano, la amplitud de la arena y el movimiento de las olas crean un paisaje muy característico.',
     imagen: F('playabalconada'),
     imagenes: [F('playabalconada'), F('balconada')],
     orden: 2,
-  },
-  {
-    id: 'rec-playa-los-botes',
-    slug: 'playa-los-botes',
-    nombre: 'Playa Los Botes',
-    tipo: 'playa',
-    descripcion: '[completar: recomendación del equipo]',
-    imagen: F('playalosbotes'),
-    orden: 3,
   },
   {
     id: 'rec-playa-el-cabito',
     slug: 'playa-el-cabito',
     nombre: 'Playa El Cabito',
     tipo: 'playa',
-    descripcion: '[completar: recomendación del equipo]',
+    descripcion:
+      'Más pequeña e íntima, está rodeada por formaciones rocosas que le dan un carácter particular. Sus aguas suelen ser más tranquilas que las de las playas oceánicas abiertas, y las rocas forman pequeñas piscinas naturales según la marea. Es un buen lugar para caminar, explorar la costa y disfrutar del paisaje.',
     imagen: '',
+    orden: 3,
+  },
+  {
+    id: 'rec-playa-los-botes',
+    slug: 'playa-los-botes',
+    nombre: 'Playa Los Botes',
+    tipo: 'playa',
+    descripcion:
+      'Una playa amplia y de espíritu tranquilo, muy elegida por quienes buscan disfrutar del mar sin alejarse demasiado del centro. Tiene una costa abierta, arena extensa y buenas condiciones para caminar y practicar deportes acuáticos cuando el mar acompaña.',
+    imagen: F('playalosbotes'),
     orden: 4,
   },
   {
@@ -236,17 +241,19 @@ export const recomendaciones: Recomendacion[] = [
     slug: 'playa-la-serena',
     nombre: 'Playa La Serena',
     tipo: 'playa',
-    descripcion: '[completar: recomendación del equipo]',
+    descripcion:
+      'Continuando hacia el este, La Serena ofrece un paisaje más abierto y silencioso. Es una playa extensa, rodeada de dunas y vegetación costera, con una sensación de mayor aislamiento. Es especialmente atractiva para quienes buscan bajar el ritmo y conectar con el entorno natural.',
     imagen: F('playalaserena2'),
     imagenes: [F('playalaserena2'), F('playaserena')],
     orden: 5,
   },
   {
-    id: 'rec-la-laguna',
-    slug: 'la-laguna',
-    nombre: 'La Laguna',
+    id: 'rec-playa-la-aguada',
+    slug: 'playa-la-aguada',
+    nombre: 'Playa La Aguada',
     tipo: 'playa',
-    descripcion: '[completar: recomendación del equipo]',
+    descripcion:
+      'Ubicada al este de La Balconada, es una de las playas tradicionales de La Paloma. Tiene una costa extensa y abierta, con bastante oleaje y un entorno residencial tranquilo. Es una buena opción para disfrutar del amanecer.',
     imagen: '',
     orden: 6,
   },
@@ -255,7 +262,8 @@ export const recomendaciones: Recomendacion[] = [
     slug: 'bahia-chica',
     nombre: 'Bahía Chica',
     tipo: 'playa',
-    descripcion: '[completar: recomendación del equipo]',
+    descripcion:
+      'Una pequeña playa protegida y de aguas generalmente más calmas, ubicada cerca del centro. Por su tamaño y reparo resulta especialmente agradable para familias con niños y para quienes prefieren un baño más tranquilo.',
     imagen: '',
     orden: 7,
   },
@@ -264,38 +272,53 @@ export const recomendaciones: Recomendacion[] = [
     slug: 'bahia-grande',
     nombre: 'Bahía Grande',
     tipo: 'playa',
-    descripcion: '[completar: recomendación del equipo]',
+    descripcion:
+      'Junto al puerto de La Paloma, esta bahía tiene aguas más protegidas y un paisaje diferente al de las playas oceánicas. Desde aquí se puede contemplar el puerto, las embarcaciones y parte del movimiento costero de la ciudad. Es también un buen punto para disfrutar de la costa cuando el océano está más movido.',
     imagen: '',
     orden: 8,
   },
   {
-    id: 'rec-faro',
+    id: 'rec-faro-cabo-santa-maria',
     slug: 'faro-cabo-santa-maria',
-    nombre: 'Faro del Cabo Santa María',
+    nombre: 'Playa del Faro',
     tipo: 'actividad',
-    descripcion: '[completar: recomendación del equipo]',
+    descripcion:
+      'La costa alrededor del faro combina rocas, pequeñas playas y vistas abiertas hacia el océano. Es uno de los paisajes más representativos de La Paloma.',
     imagen: F('farocabosantamaria'),
     orden: 9,
+  },
+  {
+    id: 'rec-la-laguna',
+    slug: 'la-laguna',
+    nombre: 'La Laguna',
+    tipo: 'otro',
+    descripcion:
+      '[completar: recomendación del equipo]',
+    imagen: '',
+    orden: 10,
   },
   {
     id: 'rec-skatepark',
     slug: 'skatepark',
     nombre: 'Skatepark',
     tipo: 'actividad',
-    descripcion: '[completar: recomendación del equipo]',
+    descripcion:
+      '[completar: recomendación del equipo]',
     imagen: F('skatepark'),
-    orden: 10,
+    orden: 11,
   },
   {
     id: 'rec-puerto',
     slug: 'puerto',
     nombre: 'Puerto',
     tipo: 'actividad',
-    descripcion: '[completar: recomendación del equipo]',
+    descripcion:
+      '[completar: recomendación del equipo]',
     imagen: '',
-    orden: 11,
+    orden: 12,
   },
 ];
+
 
 
 // ── Extensiones (no están en DATA.md) ───────────────────────────────────────
