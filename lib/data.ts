@@ -29,10 +29,11 @@ export const landingConfig: LandingConfig = {
     imagenApoyo: F('descansarcercadelmar'),
   },
   ubicacion: {
-    direccion: '[completar: dirección del predio], La Paloma, Rocha, Uruguay',
+    direccion: 'La Paloma, Rocha, Uruguay',
     // Embed sin API key. [completar: reemplazar por el pin exacto del predio]
     mapaEmbedUrl:
       'https://www.google.com/maps?q=Playa+Anaconda,+La+Paloma,+Rocha,+Uruguay&z=15&output=embed',
+    mapaUrl: 'https://maps.app.goo.gl/SAz42XAB879cCEqL9',
     imagenDrone: F('descansarcercadelmar2'),
   },
   instalaciones: {
@@ -148,6 +149,11 @@ export const alojamientos: Alojamiento[] = [
     precio: null,
     precioUnidad: 'por noche',
     fotos: [F('glampingpara2acacia'), F('glampingpara2butia'), F('glampingpara2pimientorosa')],
+    variantes: [
+      { nombre: 'Acacia', foto: F('glampingpara2acacia') },
+      { nombre: 'Butiá', foto: F('glampingpara2butia') },
+      { nombre: 'Pimiento Rosa', foto: F('glampingpara2pimientorosa') },
+    ],
     orden: 3,
   },
 ];
@@ -194,6 +200,7 @@ export const recomendaciones: Recomendacion[] = [
     tipo: 'playa',
     descripcion: 'La playa que tenemos a pocos pasos. Buena para caminar la orilla temprano y quedarse al atardecer.',
     imagen: F('playaanaconda3'),
+    imagenes: [F('playaanaconda3'), F('playaanaconda1'), F('playanaconda')],
     orden: 1,
   },
   {
@@ -203,6 +210,7 @@ export const recomendaciones: Recomendacion[] = [
     tipo: 'playa',
     descripcion: '[completar: recomendación del equipo]',
     imagen: F('playabalconada'),
+    imagenes: [F('playabalconada'), F('balconada')],
     orden: 2,
   },
   {
@@ -230,6 +238,7 @@ export const recomendaciones: Recomendacion[] = [
     tipo: 'playa',
     descripcion: '[completar: recomendación del equipo]',
     imagen: F('playalaserena2'),
+    imagenes: [F('playalaserena2'), F('playaserena')],
     orden: 5,
   },
   {
@@ -319,22 +328,29 @@ export const extensiones: Extensiones = {
       id: 'mar',
       titulo: 'Conexión con el mar',
       descripcion: 'Playa Anaconda a pocos pasos: olas, caminatas por la orilla y atardeceres que caen en el mar.',
-      detalles: ['Clases de surf: para todos los niveles', 'Playa', 'Caminatas', 'Atardeceres'],
-      foto: F('enmar2'),
+      detalles: ['Playa', 'Caminatas', 'Atardeceres'],
+      fotos: [F('enmar2'), F('enmar3'), F('enmar4'), F('enmar5'), F('enmar')],
+    },
+    {
+      id: 'surf',
+      titulo: 'Clases de surf',
+      descripcion: 'Para todos los niveles, con la escuela de la zona y a pasos del predio.',
+      detalles: ['Todos los niveles', 'Tabla incluida', 'Playa Anaconda'],
+      fotos: [F('surf3'), F('surf1')],
     },
     {
       id: 'naturaleza',
       titulo: 'Naturaleza',
       descripcion: 'Vegetación nativa, aire libre y los sonidos del lugar marcando el ritmo del día.',
       detalles: ['Vegetación', 'Aire libre', 'Sonidos', 'Ritmo natural'],
-      foto: F('naturaleza'),
+      fotos: [F('naturaleza'), F('descansar'), F('descansar2')],
     },
     {
       id: 'descanso',
       titulo: 'Descanso',
       descripcion: 'Una hamaca, un libro, dormir con el sonido del mar.',
       detalles: ['Leer', 'Dormir', 'Desconectar'],
-      foto: F('endescansar1'),
+      fotos: [F('endescansar1'), F('endescansar')],
     },
   ],
   galeriaIntroduccion: [F('descansar2'), F('enmar2'), F('endescansar1'), F('espaciocomun4'), F('surf3'), F('enmar3'), F('espaciocomun3'), F('enmar4')],

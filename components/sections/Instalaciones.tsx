@@ -1,6 +1,6 @@
 import { altDe } from '@/lib/alt';
 import type { Extensiones, Instalaciones as TInst } from '@/lib/types';
-import { Foto } from '../ui/Foto';
+import { GaleriaMarco } from '../ui/GaleriaMarco';
 import { IconoInstalacion } from '../ui/Iconos';
 import { SeccionEncabezado } from '../ui/SeccionEncabezado';
 
@@ -24,9 +24,20 @@ export function Instalaciones({ instalaciones, ext }: { instalaciones: TInst; ex
                 </div>
                 {fotos.length ? (
                   <div className={`grid grid-cols-2 gap-3 md:col-span-6 ${idx % 2 ? 'md:order-1 md:col-start-1' : 'md:col-start-7'}`}>
-                    {fotos.slice(0, 2).map((src, i) => (
-                      <Foto key={src} src={src} alt={altDe(ext, src, item.titulo)} className={`rounded-foto ${i === 1 ? 'mt-10' : ''}`} sizes="(min-width: 768px) 24vw, 45vw" />
-                    ))}
+                    {/* Se mantienen los dos marcos; las fotos de más se
+                        reparten dentro de cada uno, deslizables. */}
+                    {[fotos.filter((_, i) => i % 2 === 0), fotos.filter((_, i) => i % 2 === 1)].map((grupo, i) =>
+                      grupo.length ? (
+                        <GaleriaMarco
+                          key={i}
+                          etiquetaRegion={`Fotos de ${item.titulo}, marco ${i + 1}`}
+                          fotos={grupo.map((src) => ({ src, alt: altDe(ext, src, item.titulo) }))}
+                          aspecto="9 / 16"
+                          sizes="(min-width: 768px) 24vw, 45vw"
+                          className={i === 1 ? 'mt-10' : ''}
+                        />
+                      ) : null,
+                    )}
                   </div>
                 ) : null}
               </li>

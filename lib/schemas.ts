@@ -15,6 +15,7 @@ export const alojamientoSchema = z.object({
   descripcion: texto,
   capacidad: z.number().int().positive(),
   etiquetaCapacidad: texto.optional(),
+  variantes: z.array(z.object({ nombre: texto, foto: texto })).optional(),
   caracteristicas: listaTextos,
   incluye: listaTextos,
   precio: z.number().nullable(),
@@ -38,6 +39,7 @@ export const recomendacionSchema = z.object({
   tipo: z.enum(['playa', 'restaurante', 'actividad', 'otro']),
   descripcion: texto,
   imagen: texto,
+  imagenes: z.array(texto).optional(),
   orden: z.number(),
 });
 

@@ -60,7 +60,7 @@ export function TiraFotos({ fotos, etiqueta }: { fotos: { src: string; alt: stri
       onFocusCapture={() => setQuieta(true)}
       onBlurCapture={() => setQuieta(false)}
     >
-      <div ref={pista} tabIndex={0} role="region" aria-label={etiqueta} className="tira tira-viva">
+      <div ref={pista} data-galeria tabIndex={0} role="region" aria-label={etiqueta} className="tira tira-viva">
         {fotos.map(({ src, alt }) => (
           <Foto key={src} src={src} alt={alt} className="rounded-foto" sizes="(min-width: 768px) 18rem, 68vw" />
         ))}

@@ -13,7 +13,16 @@ export function Ubicacion({ ubicacion, ext }: { ubicacion: TUbicacion; ext: Exte
             Estamos en La Paloma, Playa Anaconda. Salís del predio y a pasos
             estás con los pies en la arena.
           </p>
-          <address className="mt-6 not-italic text-tinta-suave">{ubicacion.direccion}</address>
+          {ubicacion.mapaUrl ? (
+            <a
+              href={ubicacion.mapaUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="boton boton-secundario mt-6 text-eucalipto"
+            >
+              Ver la ubicación en Google Maps
+            </a>
+          ) : null}
         </div>
         <div className="overflow-hidden rounded-foto bg-cal">
           {ubicacion.imagenDrone ? (

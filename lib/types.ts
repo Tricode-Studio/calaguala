@@ -17,6 +17,8 @@ export interface Alojamiento {
   capacidad: number;
   /** Reemplaza el texto de capacidad en la tarjeta (ej. 'Tarifa por persona'). */
   etiquetaCapacidad?: string;
+  /** Unidades con nombre propio dentro del mismo tipo de alojamiento. */
+  variantes?: { nombre: string; foto: string }[];
   caracteristicas: string[];
   incluye: string[];
   /** NUMBER. `null` = campo vacío en el CMS → la UI muestra "Tarifa a consultar". */
@@ -44,6 +46,8 @@ export interface Recomendacion {
   tipo: TipoRecomendacion;
   /** LONG_TEXT */
   descripcion: string;
+  /** Fotos extra del mismo lugar; con más de una, la tarjeta las pasa. */
+  imagenes?: string[];
   imagen: string;
   orden: number;
 }
@@ -62,6 +66,8 @@ export interface Introduccion {
 export interface Ubicacion {
   direccion: string;
   mapaEmbedUrl: string;
+  /** Enlace para abrir la ubicación en la app de mapas. */
+  mapaUrl: string;
   imagenDrone: string;
 }
 export interface ItemInstalacion {
@@ -124,11 +130,12 @@ export type SeccionId =
   | 'contacto';
 
 export interface Experiencia {
-  id: 'mar' | 'naturaleza' | 'descanso';
+  id: string;
   titulo: string;
   descripcion: string;
   detalles: string[];
-  foto: string;
+  /** Cada experiencia tiene su propia galería. */
+  fotos: string[];
 }
 
 export interface Extensiones {

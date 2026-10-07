@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Figtree, Young_Serif } from 'next/font/google';
 import { getLandingConfig } from '@/lib/cms';
+import { VisorFoto } from '@/components/ui/VisorFoto';
 import './globals.css';
 
 // next/font: self-hosting + preload + font-display: swap
@@ -55,7 +56,10 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es" className={`${youngSerif.variable} ${figtree.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <VisorFoto />
+      </body>
     </html>
   );
 }

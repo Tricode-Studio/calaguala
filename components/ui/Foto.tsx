@@ -12,7 +12,12 @@ interface Props {
 
 export function Foto({ src, alt, aspecto = '9 / 16', sizes = '(min-width: 768px) 33vw, 80vw', priority, className = '' }: Props) {
   return (
-    <div className={`relative overflow-hidden bg-arena ${className}`} style={{ aspectRatio: aspecto }}>
+    <div
+      data-foto={src}
+      data-foto-alt={alt}
+      className={`relative cursor-zoom-in overflow-hidden bg-arena ${className}`}
+      style={{ aspectRatio: aspecto }}
+    >
       <Image
         src={src}
         alt={alt}
