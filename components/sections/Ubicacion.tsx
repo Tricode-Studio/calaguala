@@ -1,5 +1,4 @@
 import type { Extensiones, Ubicacion as TUbicacion } from '@/lib/types';
-import { Foto } from '../ui/Foto';
 import { SeccionEncabezado } from '../ui/SeccionEncabezado';
 
 export function Ubicacion({ ubicacion, ext }: { ubicacion: TUbicacion; ext: Extensiones }) {
@@ -25,9 +24,7 @@ export function Ubicacion({ ubicacion, ext }: { ubicacion: TUbicacion; ext: Exte
           ) : null}
         </div>
         <div className="overflow-hidden rounded-foto bg-cal">
-          {ubicacion.imagenDrone ? (
-            <Foto src={ubicacion.imagenDrone} alt="Vista aérea del predio de Calaguala y la costa de Playa Anaconda" aspecto="16 / 10" sizes="(min-width: 768px) 60vw, 100vw" />
-          ) : ubicacion.mapaEmbedUrl ? (
+          {ubicacion.mapaEmbedUrl ? (
             <iframe
               src={ubicacion.mapaEmbedUrl}
               title="Mapa: ubicación de Calaguala en La Paloma, cerca de Playa Anaconda"

@@ -29,6 +29,7 @@ export function Introduccion({ intro, ext }: { intro: TIntro; ext: Extensiones }
 
         </div>
         <TiraFotos
+          aspecto="3 / 4"
           etiqueta="Galería: playa, surf, naturaleza y atardeceres"
           fotos={ext.galeriaIntroduccion.map((src) => ({ src, alt: altDe(ext, src, 'Vida de playa') }))}
         />

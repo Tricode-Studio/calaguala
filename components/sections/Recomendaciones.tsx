@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import type { Extensiones, Recomendacion } from '@/lib/types';
 import { RecomendacionCard } from '../RecomendacionCard';
 import { SeccionEncabezado } from '../ui/SeccionEncabezado';
@@ -16,6 +17,11 @@ export function Recomendaciones({ items, ext }: { items: Recomendacion[]; ext: E
             </li>
           ))}
         </ul>
+        <div className="mt-12">
+          <Link href="/la-paloma" className="boton boton-secundario text-oceano">
+            Descubrí La Paloma <span aria-hidden="true">&rarr;</span>
+          </Link>
+        </div>
       </div>
     </section>
   );

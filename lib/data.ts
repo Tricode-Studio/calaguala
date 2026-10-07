@@ -7,6 +7,7 @@
  */
 import type {
   Alojamiento,
+  LaPaloma,
   Extensiones,
   LandingConfig,
   PreguntaFrecuente,
@@ -359,7 +360,7 @@ export const extensiones: Extensiones = {
       titulo: 'Clases de surf',
       descripcion: 'Para todos los niveles, con la escuela de la zona y a pasos del predio.',
       detalles: ['Todos los niveles', 'Tabla incluida', 'Playa Anaconda'],
-      fotos: [F('surf3'), F('surf1')],
+      fotos: [F('surf'), F('surf3'), F('surf1')],
     },
     {
       id: 'naturaleza',
@@ -376,7 +377,7 @@ export const extensiones: Extensiones = {
       fotos: [F('endescansar1'), F('endescansar')],
     },
   ],
-  galeriaIntroduccion: [F('descansar2'), F('enmar2'), F('endescansar1'), F('endescansar'), F('enmar'), F('enmar3'), F('enmar4')],
+  galeriaIntroduccion: [F('enmar2'), F('descansarenelmar'), F('enmar'), F('enmar3'), F('enmar4')],
   fotosInstalaciones: {
     cocina: [F('cocina'), F('cocina3')],
     ducha: [F('ducha'), F('bano')],
@@ -421,5 +422,77 @@ export const extensiones: Extensiones = {
     departamento: 'Rocha',
     pais: 'Uruguay',
     codigoPais: 'UY',
+  },
+};
+
+
+// ── Página "Descubrí La Paloma" ─────────────────────────────────────────────
+// Textos provistos por el cliente. Las fotos que faltan quedan en '' y el
+// bloque se adapta: nunca se renderiza un marco vacío.
+export const laPaloma: LaPaloma = {
+  hero: {
+    titulo: 'Descubrí La Paloma',
+    bajada: 'Mar, naturaleza y pequeños lugares para descubrir.',
+    entrada:
+      'Desde playas abiertas al Atlántico hasta lagunas, bosques, senderos y rincones donde el tiempo parece ir más lento.',
+    foto: F('fondodescansarcercadelmar'),
+  },
+  playas: {
+    intro:
+      'La costa cambia de carácter cada pocos kilómetros: de las olas abiertas del océano a las bahías protegidas junto al puerto.',
+    items: [
+      { nombre: 'La Balconada', texto: 'Costa abierta al océano y arena amplia. Un clásico para el atardecer.', foto: F('playabalconada') },
+      { nombre: 'El Cabito', texto: 'Pequeña e íntima, con rocas que forman piscinas naturales según la marea.', foto: '' },
+      { nombre: 'Los Botes', texto: 'Amplia y tranquila, cerca del centro y buena para caminar.', foto: F('playalosbotes') },
+      { nombre: 'Anaconda', texto: 'Agreste y de horizonte abierto. La que tenemos a pocos pasos.', foto: F('playaanaconda3'), distancia: 'A pasos de Calaguala' },
+      { nombre: 'La Serena', texto: 'Extensa y silenciosa, rodeada de dunas y vegetación costera.', foto: F('playalaserena2') },
+      { nombre: 'La Aguada', texto: 'Costa extensa y con oleaje, en un entorno residencial tranquilo. Buena para el amanecer.', foto: '' },
+      { nombre: 'Bahía Chica', texto: 'Protegida y de aguas calmas, cerca del centro.', foto: '' },
+      { nombre: 'Bahía Grande', texto: 'Junto al puerto, con aguas resguardadas y vista a las embarcaciones.', foto: '' },
+    ],
+  },
+  naturaleza: {
+    destacado: {
+      titulo: 'Laguna de Rocha',
+      texto: 'Un paisaje de agua, humedales y vida silvestre donde el océano se encuentra con la laguna.',
+      foto: '', // [completar: foto panorámica de la Laguna de Rocha]
+    },
+    secundarios: [
+      { titulo: 'Dunas', texto: 'Médanos y pasarelas de madera que bajan hasta la arena.', foto: F('descansar2') },
+      { titulo: 'Bosques', texto: 'Montes de eucaliptos y pinos que cortan el viento del mar.', foto: F('naturaleza') },
+      { titulo: 'Vegetación costera', texto: 'Matorral bajo y plantas que sostienen la arena.', foto: F('descansar') },
+      { titulo: 'Observación de aves', texto: 'Aves costeras y migratorias en la laguna y los humedales.', foto: '' },
+    ],
+  },
+  experiencias: [
+    { icono: 'surf', titulo: 'Surf', texto: 'Olas del Atlántico y playas para distintos niveles.' },
+    { icono: 'bici', titulo: 'Bicicleta', texto: 'Recorrer La Paloma a un ritmo tranquilo.' },
+    { icono: 'caminata', titulo: 'Caminatas', texto: 'Costa, dunas, bosques y senderos.' },
+    { icono: 'skate', titulo: 'Skate', texto: 'El skatepark como punto de encuentro de la comunidad joven.' },
+    { icono: 'ave', titulo: 'Naturaleza', texto: 'Aves, fauna y paisajes de Rocha.' },
+  ],
+  faro: {
+    titulo: 'Faro de Cabo Santa María',
+    texto:
+      'Uno de los símbolos de La Paloma. Sobre las rocas, frente al Atlántico, el faro ofrece una de las vistas más características de la costa.',
+    foto: F('farocabosantamaria'),
+    cta: 'Explorar',
+  },
+  puerto: [
+    { titulo: 'Puerto de La Paloma', texto: 'Embarcaciones, pescadores y la identidad marítima del pueblo.', foto: '' },
+    { titulo: 'Bahía Chica / Bahía Grande', texto: 'Aguas más protegidas y rincones tranquilos cerca del centro.', foto: F('skatepark') },
+  ],
+  dia: [
+    { momento: 'Mañana', texto: 'Caminar por la costa o desayunar cerca del mar.' },
+    { momento: 'Mediodía', texto: 'Playa, surf o paseo en bicicleta.' },
+    { momento: 'Tarde', texto: 'Explorar el faro, el puerto o la Laguna de Rocha.' },
+    { momento: 'Atardecer', texto: 'La Balconada y el océano.' },
+  ],
+  cierre: {
+    titulo: 'La Paloma, a tu ritmo',
+    texto:
+      'Hay lugares para explorar y otros simplemente para quedarse mirando. En La Paloma, cada día puede encontrar su propio ritmo.',
+    foto: F('enmar4'),
+    cta: 'Volver a Calaguala',
   },
 };

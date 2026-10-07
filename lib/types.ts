@@ -180,3 +180,20 @@ export interface RespuestaDisponibilidad {
   /** 'cms' = resultado real; 'local' = sin CMS, todo queda a confirmar. */
   origen: 'cms' | 'local';
 }
+
+// ── Página "Descubrí La Paloma" ─────────────────────────────────────────────
+export interface BloqueLaPaloma {
+  titulo: string;
+  texto: string;
+  foto: string;
+}
+export interface LaPaloma {
+  hero: { titulo: string; bajada: string; entrada: string; foto: string };
+  playas: { intro: string; items: { nombre: string; texto: string; foto: string; distancia?: string }[] };
+  naturaleza: { destacado: BloqueLaPaloma; secundarios: BloqueLaPaloma[] };
+  experiencias: { icono: string; titulo: string; texto: string }[];
+  faro: BloqueLaPaloma & { cta: string };
+  puerto: BloqueLaPaloma[];
+  dia: { momento: string; texto: string }[];
+  cierre: { titulo: string; texto: string; foto: string; cta: string };
+}

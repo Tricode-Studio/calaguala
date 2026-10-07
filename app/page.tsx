@@ -34,7 +34,6 @@ export default async function Home() {
         <Introduccion intro={config.introduccion} ext={ext} />
         <Ubicacion ubicacion={config.ubicacion} ext={ext} />
         <Alojamientos alojamientos={alojamientos} ext={ext} />
-        <Predio ext={ext} />
         <Instalaciones instalaciones={config.instalaciones} ext={ext} />
         <Experiencias ext={ext} />
         <Recomendaciones items={recomendaciones} ext={ext} />
@@ -42,6 +41,7 @@ export default async function Home() {
         <Reservas info={config.reservasInfo} ext={ext} />
         <InformacionPractica info={config.informacionPractica} ext={ext} />
         <Faq items={faq} ext={ext} />
+        <Predio ext={ext} />
       </main>
       <Contacto contacto={config.contacto} ubicacion={config.ubicacion} ext={ext} />
       <WhatsAppFlotante numero={config.contacto.whatsapp} />

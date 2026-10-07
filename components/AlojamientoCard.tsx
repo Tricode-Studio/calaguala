@@ -2,22 +2,31 @@ import Link from 'next/link';
 import { altDe } from '@/lib/alt';
 import { textoPrecio } from '@/lib/precio';
 import type { Alojamiento, Extensiones } from '@/lib/types';
+import { SelectorVariantes } from './SelectorVariantes';
 import { GaleriaMarco } from './ui/GaleriaMarco';
 import { IconoCheck } from './ui/Iconos';
 import { RichText } from './ui/RichText';
 
 export function AlojamientoCard({ alojamiento: a, ext }: { alojamiento: Alojamiento; ext: Extensiones }) {
   const idTitulo = `aloj-${a.slug}`;
-  // Con variantes, cada foto de la galería lleva el nombre de su unidad.
-  const fotos = a.variantes?.length
-    ? a.variantes.map((v) => ({ src: v.foto, alt: '', etiqueta: v.nombre }))
-    : a.fotos.map((src) => ({ src, alt: '', etiqueta: undefined }));
+  const fotos = a.fotos.map((src) => ({ src, alt: '' }));
   return (
     <article aria-labelledby={idTitulo} className="flex h-full flex-col">
-      <GaleriaMarco
-        etiquetaRegion={`Fotos de ${a.nombre}`}
-        fotos={fotos.map((f) => ({ ...f, alt: altDe(ext, f.src, `${a.nombre}${f.etiqueta ? `, ${f.etiqueta}` : ''}`) }))}
-      />
+      {a.variantes?.length ? (
+        <SelectorVariantes
+          idGrupo={`variante-${a.slug}`}
+          variantes={a.variantes.map((v) => ({
+            nombre: v.nombre,
+            foto: v.foto,
+            alt: altDe(ext, v.foto, `${a.nombre}, ${v.nombre}`),
+          }))}
+        />
+      ) : (
+        <GaleriaMarco
+          etiquetaRegion={`Fotos de ${a.nombre}`}
+          fotos={fotos.map((f) => ({ ...f, alt: altDe(ext, f.src, a.nombre) }))}
+        />
+      )}
 
       <h3 id={idTitulo} className="mt-5">{a.nombre}</h3>
       <p className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-tinta-suave">
@@ -26,12 +35,7 @@ export function AlojamientoCard({ alojamiento: a, ext }: { alojamiento: Alojamie
       </p>
       <RichText html={a.descripcion} className="mt-4" />
 
-      {a.variantes?.length ? (
-        <p className="mt-4 text-paso text-tinta-suave">
-          <span className="font-semibold text-eucalipto">Tres carpas disponibles: </span>
-          {a.variantes.map((v) => v.nombre).join(' · ')}
-        </p>
-      ) : null}
+
 
       {a.caracteristicas.length ? (
         <ul className="mt-5 space-y-1.5 text-paso">

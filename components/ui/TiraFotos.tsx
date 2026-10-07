@@ -13,7 +13,7 @@ const PAUSA_MS = 4000;
  * Se detiene al tocarla, al pasar el cursor y al navegar con teclado, y no
  * arranca si el sistema pide menos movimiento (WCAG 2.2.2).
  */
-export function TiraFotos({ fotos, etiqueta }: { fotos: { src: string; alt: string }[]; etiqueta: string }) {
+export function TiraFotos({ fotos, etiqueta, aspecto }: { fotos: { src: string; alt: string }[]; etiqueta: string; aspecto?: string }) {
   const pista = useRef<HTMLDivElement>(null);
   const [quieta, setQuieta] = useState(false);
   const [extremo, setExtremo] = useState<'inicio' | 'medio' | 'fin'>('inicio');
@@ -62,7 +62,7 @@ export function TiraFotos({ fotos, etiqueta }: { fotos: { src: string; alt: stri
     >
       <div ref={pista} data-galeria tabIndex={0} role="region" aria-label={etiqueta} className="tira tira-viva">
         {fotos.map(({ src, alt }) => (
-          <Foto key={src} src={src} alt={alt} className="rounded-foto" sizes="(min-width: 768px) 18rem, 68vw" />
+          <Foto key={src} src={src} alt={alt} aspecto={aspecto} className="rounded-foto" sizes="(min-width: 768px) 18rem, 68vw" />
         ))}
       </div>
 
