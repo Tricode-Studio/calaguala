@@ -376,7 +376,7 @@ export const extensiones: Extensiones = {
       fotos: [F('endescansar1'), F('endescansar')],
     },
   ],
-  galeriaIntroduccion: [F('descansar2'), F('enmar2'), F('endescansar1'), F('espaciocomun4'), F('surf3'), F('enmar3'), F('espaciocomun3'), F('enmar4')],
+  galeriaIntroduccion: [F('descansar2'), F('enmar2'), F('endescansar1'), F('endescansar'), F('enmar'), F('enmar3'), F('enmar4')],
   fotosInstalaciones: {
     cocina: [F('cocina'), F('cocina3')],
     ducha: [F('ducha'), F('bano')],
