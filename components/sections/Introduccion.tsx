@@ -11,7 +11,7 @@ export function Introduccion({ intro, ext }: { intro: TIntro; ext: Extensiones }
       {/* Foto de fondo decorativa. El velo mantiene el texto oscuro legible:
           la foto tiene cielo claro y mar oscuro, sin él no se leería. */}
       <Image
-        src="/fotos/mardefondo.webp"
+        src="/fotos/fondodescansarcercadelmar.webp"
         alt=""
         aria-hidden="true"
         fill

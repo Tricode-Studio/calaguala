@@ -50,7 +50,7 @@ export function PasoOpciones() {
               <label key={tipoAlojamientoId}
                 className={`flex min-h-14 items-start gap-4 rounded-[var(--radius-control)] border-[1.5px] px-4 py-4 ${
                   bloqueada ? 'cursor-not-allowed border-arena bg-arena/40 text-tinta-suave'
-                    : 'cursor-pointer border-arena-oscura bg-white has-[:checked]:border-eucalipto has-[:checked]:bg-arena has-[:focus-visible]:outline has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-mar'
+                    : 'cursor-pointer border-arena-oscura bg-nieve has-[:checked]:border-eucalipto has-[:checked]:bg-arena has-[:focus-visible]:outline has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-mar'
                 }`}>
                 <input type="radio" name="opcion" value={tipoAlojamientoId} disabled={bloqueada}
                   checked={s.tipoAlojamientoId === tipoAlojamientoId}

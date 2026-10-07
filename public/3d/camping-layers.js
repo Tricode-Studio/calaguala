@@ -6,9 +6,9 @@ const fabricMat = (name, color, extra = {}) => new THREE.MeshPhysicalMaterial(Ob
 }, extra));
 
 const M = {
-  boardLight: new THREE.MeshStandardMaterial({ name: 'deck_board', color: 0xc9a173, roughness: 0.72 }),
-  boardAlt: new THREE.MeshStandardMaterial({ name: 'deck_board_alt', color: 0xbe9467, roughness: 0.8 }),
-  frameLight: new THREE.MeshStandardMaterial({ name: 'deck_frame', color: 0xa8825b, roughness: 0.88 }),
+  boardLight: new THREE.MeshStandardMaterial({ name: 'deck_board', color: 0xa98464, roughness: 0.72 }),
+  boardAlt: new THREE.MeshStandardMaterial({ name: 'deck_board_alt', color: 0x8A6848, roughness: 0.8 }),
+  frameLight: new THREE.MeshStandardMaterial({ name: 'deck_frame', color: 0x77583d, roughness: 0.88 }),
   fabric: fabricMat('tent_fabric', 0xd9ccb0, { side: THREE.DoubleSide }),
   fabricDark: fabricMat('tent_trim', 0x5a6158, { side: THREE.DoubleSide, sheen: 0.35 }),
   mesh: new THREE.MeshStandardMaterial({

@@ -20,9 +20,9 @@ const VB_H = MAX_Y - MIN_Y;
 
 const COL = {
   sueloTop: '#e7dcc8', sueloIzq: '#b9a47f', sueloDer: '#cdbb9c',
-  camino: '#f4f4f0', copa: '#5c7160', copaLuz: '#7d9273', tronco: '#6b5a44',
+  camino: '#f4f4f0', copa: '#5c7160', copaLuz: '#7d9273', tronco: '#8A6848',
   pared: '#f4f4f0', paredSombra: '#d9d6cc', techo: '#9aa5a9',
-  lona: '#f4f4f0', lonaSombra: '#cfc3dc', parcela: '#cdbb9c', fuego: '#e6a13c',
+  lona: '#f4f4f0', lonaSombra: '#cfc3dc', parcela: '#BFAC89', fuego: '#e6a13c',
 };
 
 function Caja({ e }: { e: Elemento }) {

@@ -26,14 +26,14 @@ export const landingConfig: LandingConfig = {
     // Copy provisto por el cliente. [completar: el brief lo trae cortado con "..."]
     texto:
       '<p>En Calaguala creamos un espacio para descansar, conectar con el mar y la vida natural de La Paloma.</p>',
-    imagenApoyo: F('carpaalfondo'),
+    imagenApoyo: F('descansarcercadelmar'),
   },
   ubicacion: {
     direccion: '[completar: dirección del predio], La Paloma, Rocha, Uruguay',
     // Embed sin API key. [completar: reemplazar por el pin exacto del predio]
     mapaEmbedUrl:
       'https://www.google.com/maps?q=Playa+Anaconda,+La+Paloma,+Rocha,+Uruguay&z=15&output=embed',
-    imagenDrone: '',
+    imagenDrone: F('descansarcercadelmar2'),
   },
   instalaciones: {
     items: [
@@ -117,7 +117,7 @@ export const alojamientos: Alojamiento[] = [
     incluye: ['Acceso a espacios comunes', 'Cocina compartida', 'Baños', 'Duchas con agua caliente'],
     precio: null,
     precioUnidad: 'por noche',
-    fotos: [F('carpaalfondo'), F('espaciocomunfuera1')],
+    fotos: [F('espacioparacarpa'), F('naturaleza')],
     orden: 1,
   },
   {
@@ -132,7 +132,7 @@ export const alojamientos: Alojamiento[] = [
     incluye: ['Alojamiento en carpa', 'Acceso a espacios comunes', 'Cocina compartida', 'Baños', 'Duchas con agua caliente'],
     precio: null,
     precioUnidad: 'por noche',
-    fotos: [F('espaciocomunfuera'), F('espaciocomun')], // [completar: fotos propias del glamping]
+    fotos: [F('glampingpara1'), F('glampingpara1-2')],
     orden: 2,
   },
   {
@@ -147,7 +147,7 @@ export const alojamientos: Alojamiento[] = [
     incluye: ['Alojamiento en carpa', 'Acceso a espacios comunes', 'Cocina compartida', 'Baños', 'Duchas con agua caliente'],
     precio: null,
     precioUnidad: 'por noche',
-    fotos: [F('espaciocomun2'), F('espaciocomun3')], // [completar: fotos propias del glamping]
+    fotos: [F('glampingpara2acacia'), F('glampingpara2butia'), F('glampingpara2pimientorosa')],
     orden: 3,
   },
 ];
@@ -193,7 +193,7 @@ export const recomendaciones: Recomendacion[] = [
     nombre: 'Playa Anaconda',
     tipo: 'playa',
     descripcion: 'La playa que tenemos a pocos pasos. Buena para caminar la orilla temprano y quedarse al atardecer.',
-    imagen: F('atardecer'),
+    imagen: F('playaanaconda3'),
     orden: 1,
   },
   {
@@ -202,7 +202,7 @@ export const recomendaciones: Recomendacion[] = [
     nombre: 'Playa La Balconada',
     tipo: 'playa',
     descripcion: '[completar: recomendación del equipo]',
-    imagen: '',
+    imagen: F('playabalconada'),
     orden: 2,
   },
   {
@@ -211,7 +211,7 @@ export const recomendaciones: Recomendacion[] = [
     nombre: 'Playa Los Botes',
     tipo: 'playa',
     descripcion: '[completar: recomendación del equipo]',
-    imagen: '',
+    imagen: F('playalosbotes'),
     orden: 3,
   },
   {
@@ -229,7 +229,7 @@ export const recomendaciones: Recomendacion[] = [
     nombre: 'Playa La Serena',
     tipo: 'playa',
     descripcion: '[completar: recomendación del equipo]',
-    imagen: '',
+    imagen: F('playalaserena2'),
     orden: 5,
   },
   {
@@ -260,13 +260,22 @@ export const recomendaciones: Recomendacion[] = [
     orden: 8,
   },
   {
+    id: 'rec-faro',
+    slug: 'faro-cabo-santa-maria',
+    nombre: 'Faro del Cabo Santa María',
+    tipo: 'actividad',
+    descripcion: '[completar: recomendación del equipo]',
+    imagen: F('farocabosantamaria'),
+    orden: 9,
+  },
+  {
     id: 'rec-skatepark',
     slug: 'skatepark',
     nombre: 'Skatepark',
     tipo: 'actividad',
     descripcion: '[completar: recomendación del equipo]',
-    imagen: '',
-    orden: 9,
+    imagen: F('skatepark'),
+    orden: 10,
   },
   {
     id: 'rec-puerto',
@@ -275,7 +284,7 @@ export const recomendaciones: Recomendacion[] = [
     tipo: 'actividad',
     descripcion: '[completar: recomendación del equipo]',
     imagen: '',
-    orden: 10,
+    orden: 11,
   },
 ];
 
@@ -311,41 +320,59 @@ export const extensiones: Extensiones = {
       titulo: 'Conexión con el mar',
       descripcion: 'Playa Anaconda a pocos pasos: olas, caminatas por la orilla y atardeceres que caen en el mar.',
       detalles: ['Clases de surf: para todos los niveles', 'Playa', 'Caminatas', 'Atardeceres'],
-      foto: F('surf'),
+      foto: F('enmar2'),
     },
     {
       id: 'naturaleza',
       titulo: 'Naturaleza',
       descripcion: 'Vegetación nativa, aire libre y los sonidos del lugar marcando el ritmo del día.',
       detalles: ['Vegetación', 'Aire libre', 'Sonidos', 'Ritmo natural'],
-      foto: F('carpaalfondo'),
+      foto: F('naturaleza'),
     },
     {
       id: 'descanso',
       titulo: 'Descanso',
       descripcion: 'Una hamaca, un libro, dormir con el sonido del mar.',
       detalles: ['Leer', 'Dormir', 'Desconectar'],
-      foto: F('espaciocomunfuera1'),
+      foto: F('endescansar1'),
     },
   ],
-  galeriaIntroduccion: [F('surf'), F('carpaalfondo'), F('espaciocomun'), F('espaciocomunfuera'), F('atardecer')],
+  galeriaIntroduccion: [F('descansar2'), F('enmar2'), F('endescansar1'), F('espaciocomun4'), F('surf3'), F('enmar3'), F('espaciocomun3'), F('enmar4')],
   fotosInstalaciones: {
-    cocina: [F('cocina2'), F('cocina')],
-    ducha: [], // [completar: fotos de baños y duchas]
-    descanso: [F('espaciocomun3'), F('espaciocomunfuera')],
+    cocina: [F('cocina'), F('cocina3')],
+    ducha: [F('ducha'), F('bano')],
+    descanso: [F('espaciocomun5'), F('espaciocomun6'), F('espaciocomun7'), F('endescansar')],
   },
   altFotos: {
     [F('portada')]: 'Carpa sobre un deck de madera bajo un toldo, con una hamaca paraguaya colgada entre los árboles y el sol del atardecer filtrándose entre la vegetación',
-    [F('atardecer')]: 'Atardecer sobre Playa Anaconda, con el sol bajando entre nubes y la orilla mojada reflejando la luz',
-    [F('carpaalfondo')]: 'Carpa bajo un árbol con una hamaca colgada, rodeada de vegetación nativa en el predio de Calaguala',
-    [F('cocina')]: 'Cocina compartida de madera con anafe, pileta y una ventana que da a los árboles',
-    [F('cocina2')]: 'Cocina compartida con mesada de madera, pava sobre el anafe y utensilios colgados',
-    [F('espaciocomun')]: 'Espacio común techado con piso de arena, mesa de madera y una cortina blanca abierta hacia el jardín',
-    [F('espaciocomun2')]: 'Banco y mesa de madera bajo el techo del espacio común, sobre piso de arena',
-    [F('espaciocomun3')]: 'Galería techada con piso de arena, sillón y mesa, abierta hacia el jardín',
-    [F('espaciocomunfuera')]: 'Mesas y sillas al aire libre bajo los árboles, con una sombrilla blanca y una hamaca al fondo',
-    [F('espaciocomunfuera1')]: 'Mesa blanca con dos sillas bajo un árbol, junto a una hamaca paraguaya',
-    [F('surf')]: 'Persona caminando hacia el mar con una tabla de surf sobre la cabeza, entre pastos altos',
+    [F('descansarcercadelmar')]: 'Carpa bajo un árbol con una hamaca colgada, rodeada de vegetación nativa en el predio de Calaguala',
+    [F('fondodescansarcercadelmar')]: 'Playa abierta de arena con el mar a la izquierda y el faro de La Paloma recortado a lo lejos',
+    [F('espacioparacarpa')]: 'Parcela para carpa entre árboles, con una carpa armada a la sombra y una hamaca colgada del tronco',
+    [F('glampingpara1')]: 'Carpa iglú gris y naranja armada bajo un toldo de tela, con una hamaca al costado',
+    [F('glampingpara1-2')]: 'Interior de la carpa individual con alfombra, plantas y la hamaca colgada en la entrada',
+    [F('glampingpara2acacia')]: 'Carpa doble sobre un deck de madera con la cama tendida adentro y plantas alrededor',
+    [F('glampingpara2butia')]: 'Carpa doble abierta sobre un deck, con alfombra tejida y mesitas de madera a los costados',
+    [F('glampingpara2pimientorosa')]: 'Carpa doble al pie de un árbol grande, sobre deck de madera y rodeada de vegetación',
+    [F('cocina')]: 'Cocina compartida de madera con mesada larga, ventanas al jardín y plantas en los estantes',
+    [F('cocina3')]: 'Frente de la cocina compartida, con ventana pasaplatos y mesadas de madera bajo techo',
+    [F('bano')]: 'Baño con inodoro y lavatorio de madera con bacha de vidrio',
+    [F('ducha')]: 'Ducha con mampara y una toalla colgada junto a la puerta de madera',
+    [F('espaciocomun4')]: 'Comedor techado con mesa y bancos de madera, cortina blanca abierta hacia el jardín',
+    [F('espaciocomun5')]: 'Galería techada sobre arena, con girasoles en primer plano y mesas al fondo',
+    [F('espaciocomun6')]: 'Construcción blanca del espacio común con una mesa y sillas afuera, sobre el pasto',
+    [F('espaciocomun7')]: 'Sendero de arena entre las parcelas, cubierto por toldos de tela tensados',
+    [F('enmar2')]: 'El mar de Playa Anaconda con olas rompiendo y el cielo despejado',
+    [F('enmar4')]: 'Sol grande bajando sobre la orilla al atardecer, con el reflejo sobre la arena mojada',
+    [F('endescansar1')]: 'Persona leyendo recostada en una hamaca colgada entre los árboles del predio',
+    [F('naturaleza')]: 'Vegetación nativa del predio con un arcoíris asomando sobre los árboles',
+    [F('descansar2')]: 'Pasarela de madera cruzando las dunas hacia la playa',
+    [F('surf3')]: 'Surfista tomando una ola en la costa de La Paloma',
+    [F('playaanaconda3')]: 'Atardecer sobre Playa Anaconda, con el sol bajando y la orilla mojada reflejando la luz',
+    [F('playabalconada')]: 'Playa La Balconada con la costa curvándose y el faro de La Paloma al fondo',
+    [F('playalosbotes')]: 'Botes varados en la arena de Playa Los Botes al atardecer',
+    [F('playalaserena2')]: 'Pasarela de madera entre las dunas bajando a Playa La Serena',
+    [F('skatepark')]: 'Skatepark de La Paloma pintado con grafitis, con las grúas del puerto detrás',
+    [F('farocabosantamaria')]: 'Faro del Cabo Santa María, blanco y negro, recortado contra el cielo despejado',
   },
   // [completar: confirmar el plazo real con el equipo]
   tiempoRespuesta: 'Te respondemos dentro de las próximas 24 horas.',

@@ -78,7 +78,7 @@ export function PasoSeleccion() {
             const noEntra = personas > a.capacidad;
             return (
               <label key={a.id}
-                className="flex min-h-14 cursor-pointer flex-col justify-center rounded-[var(--radius-control)] border-[1.5px] border-arena-oscura bg-white px-4 py-3 has-[:checked]:border-eucalipto has-[:checked]:bg-arena has-[:focus-visible]:outline has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-mar">
+                className="flex min-h-14 cursor-pointer flex-col justify-center rounded-[var(--radius-control)] border-[1.5px] border-arena-oscura bg-nieve px-4 py-3 has-[:checked]:border-eucalipto has-[:checked]:bg-arena has-[:focus-visible]:outline has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-mar">
                 <input type="radio" name="tipoAlojamientoId" value={a.id} className="sr-only"
                   checked={s.tipoAlojamientoId === a.id}
                   onChange={() => { set('tipoAlojamientoId')(a.id); v.tocar('tipoAlojamientoId'); }} />

@@ -15,7 +15,8 @@
   --color-eucalipto-suave: #6B8463; /* derivado: hover y apoyos */
   --color-acento: #A76F52;       /* acentos */
   --color-mar: #263B2D;          /* fondos oscuros (mismo tono que el texto) */
-  --color-tierra: #8A6848;       /* fondo de la sección del predio */
+  --color-madera: #8A6848;       /* elementos gráficos, decks */
+  --color-nieve: #FAF8F2;        /* tarjetas y espacios de contraste */
   --color-lavanda: #cfc3dc;      /* cielo del atardecer en la ilustración */
   --color-sol: #e6a13c;          /* disco del sol y foco sobre oscuro */
   --color-tinta: #263B2D;        /* texto principal */
@@ -167,7 +168,7 @@
     min-height: var(--spacing-toque);
     padding: 0.7rem 0.9rem;
     border-radius: var(--radius-control);
-    background: #fff;
+    background: var(--color-nieve);
     border: 1.5px solid var(--color-arena-oscura);
     color: var(--color-tinta);
   }
