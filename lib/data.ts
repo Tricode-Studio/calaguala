@@ -337,7 +337,7 @@ export const extensiones: Extensiones = {
     instalaciones: { titulo: 'Espacios' },
     experiencias: { titulo: 'Experiencias' },
     recomendaciones: {
-      titulo: 'La Paloma: lo que te recomendamos',
+      titulo: 'Descubrí La Paloma',
       bajada: 'Lugares de la zona que nos gustan y que vale la pena conocer.',
     },
     'que-incluye': { titulo: 'Qué incluye tu estadía' },
