@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import { altDe } from '@/lib/alt';
 import type { Extensiones, Introduccion as TIntro } from '@/lib/types';
-import { Foto } from '../ui/Foto';
 import { TiraFotos } from '../ui/TiraFotos';
 import { RichText } from '../ui/RichText';
 
@@ -28,15 +27,6 @@ export function Introduccion({ intro, ext }: { intro: TIntro; ext: Extensiones }
             Conocé el espacio
           </a>
 
-          {intro.imagenApoyo ? (
-            <Foto
-              src={intro.imagenApoyo}
-              alt={altDe(ext, intro.imagenApoyo, 'El predio de Calaguala')}
-              aspecto="4 / 3"
-              className="mt-10 rounded-foto"
-              sizes="(min-width: 768px) 40vw, 90vw"
-            />
-          ) : null}
         </div>
         <TiraFotos
           etiqueta="Galería: playa, surf, naturaleza y atardeceres"
