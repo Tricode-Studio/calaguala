@@ -7,7 +7,7 @@ export function AvisoSolicitud({ texto, tiempoRespuesta }: { texto: string; tiem
       </svg>
       <span>
         <strong className="font-semibold">{texto}</strong>
-        {tiempoRespuesta ? <> El equipo la revisa a mano. {tiempoRespuesta}</> : ' El equipo la revisa a mano y te confirma.'}
+        {tiempoRespuesta ? <> El equipo la revisa. {tiempoRespuesta}</> : ' El equipo la revisa y te confirma.'}
       </span>
     </p>
   );

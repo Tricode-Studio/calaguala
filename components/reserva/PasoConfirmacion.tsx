@@ -20,7 +20,7 @@ export function PasoConfirmacion() {
         </span>
         <p className="text-lead">
           Gracias, {d.nombre.split(' ')[0]}. Recibimos tu solicitud. <strong className="font-semibold">Todavía no es una reserva confirmada:</strong>{' '}
-          el equipo la revisa a mano y te escribe a {d.whatsapp} o {d.email}. {config.tiempoRespuesta}
+          el equipo la revisa y te escribe a {d.whatsapp} o {d.email}. {config.tiempoRespuesta}
         </p>
       </div>
 

@@ -15,6 +15,8 @@ export interface Alojamiento {
   /** RICH_TEXT (HTML) */
   descripcion: string;
   capacidad: number;
+  /** Reemplaza el texto de capacidad en la tarjeta (ej. 'Tarifa por persona'). */
+  etiquetaCapacidad?: string;
   caracteristicas: string[];
   incluye: string[];
   /** NUMBER. `null` = campo vacío en el CMS → la UI muestra "Tarifa a consultar". */

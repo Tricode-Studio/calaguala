@@ -10,7 +10,7 @@ export function Ubicacion({ ubicacion, ext }: { ubicacion: TUbicacion; ext: Exte
         <div>
           <SeccionEncabezado id="h-ubicacion" titulo={titulo} bajada={bajada} />
           <p className="prosa">
-            Estamos en La Paloma, departamento de Rocha, a pocos pasos de Playa Anaconda. Salís del predio y en un rato
+            Estamos en La Paloma, Playa Anaconda. Salís del predio y a pasos
             estás con los pies en la arena.
           </p>
           <address className="mt-6 not-italic text-tinta-suave">{ubicacion.direccion}</address>

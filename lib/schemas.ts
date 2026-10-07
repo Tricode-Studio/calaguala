@@ -14,6 +14,7 @@ export const alojamientoSchema = z.object({
   tipo: z.enum(['carpa', 'glamping-solo', 'glamping-doble']),
   descripcion: texto,
   capacidad: z.number().int().positive(),
+  etiquetaCapacidad: texto.optional(),
   caracteristicas: listaTextos,
   incluye: listaTextos,
   precio: z.number().nullable(),

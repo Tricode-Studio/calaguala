@@ -40,7 +40,7 @@ export const landingConfig: LandingConfig = {
       {
         titulo: 'Cocina compartida',
         descripcion:
-          'Equipada, con heladera y cocina de uso común. Un lugar para preparar algo rico después de la playa y compartir la mesa.',
+          'Totalmente equipada, con heladera y anafe de uso común. Un lugar para preparar algo rico después de la playa.',
         icono: 'cocina',
       },
       {
@@ -68,7 +68,7 @@ export const landingConfig: LandingConfig = {
   },
   reservasInfo: {
     textoExplicativo:
-      '<p>Contanos cuándo querés venir y cómo te gustaría quedarte. Revisamos cada solicitud a mano y te respondemos para confirmar fechas y detalles.</p>',
+      '<p>Contanos cuándo querés venir y cómo te gustaría quedarte. Revisamos cada solicitud y te respondemos para confirmar fechas y detalles.</p>',
     avisoSolicitud: 'Esto es una solicitud, no una reserva confirmada.',
   },
   informacionPractica: {
@@ -107,8 +107,9 @@ export const alojamientos: Alojamiento[] = [
     nombre: 'Espacio para carpa',
     tipo: 'carpa',
     descripcion:
-      '<p>Una parcela entre árboles y vegetación nativa, en La Paloma, a pocos pasos de Playa Anaconda. Para quienes disfrutan acampar a su manera y despertarse con el sonido del mar.</p>',
+      '<p>Una parcela entre árboles y vegetación nativa. Para quienes disfrutan acampar a su manera y despertarse con el sonido del mar.</p>',
     capacidad: 2, // [completar: personas por parcela]
+    etiquetaCapacidad: 'Tarifa por persona',
     caracteristicas: [
       'Parcela entre vegetación nativa',
       'A pocos pasos de Playa Anaconda',
@@ -125,9 +126,9 @@ export const alojamientos: Alojamiento[] = [
     nombre: 'Glamping 1 persona',
     tipo: 'glamping-solo',
     descripcion:
-      '<p>Una carpa ya armada, lista para llegar y descansar. Un refugio para una persona en La Paloma, cerca de Playa Anaconda, con tiempo para leer, caminar la orilla y no hacer nada.</p>',
+      '<p>Una carpa ya armada, lista para llegar y descansar.</p>',
     capacidad: 1,
-    caracteristicas: ['Carpa armada y lista al llegar', '[completar: equipamiento de la carpa]'],
+    caracteristicas: ['Carpa armada y lista al llegar', 'Colchón de 1 plaza, almohada y frazada'],
     incluye: ['Alojamiento en carpa', 'Acceso a espacios comunes', 'Cocina compartida', 'Baños', 'Duchas con agua caliente'],
     precio: null,
     precioUnidad: 'por noche',
@@ -140,9 +141,9 @@ export const alojamientos: Alojamiento[] = [
     nombre: 'Glamping 2 personas',
     tipo: 'glamping-doble',
     descripcion:
-      '<p>Glamping para dos personas en La Paloma, a pasos de Playa Anaconda. La carpa te espera armada; ustedes solo tienen que bajar el ritmo y mirar el atardecer.</p>',
+      '<p>Glamping para dos personas. La carpa te espera armada; ustedes solo tienen que llegar, bajar el ritmo y contemplar el mar.</p>',
     capacidad: 2,
-    caracteristicas: ['Carpa armada y lista al llegar', '[completar: equipamiento de la carpa]'],
+    caracteristicas: ['Carpa armada y lista al llegar', 'Colchón de 2 plazas, almohadas y frazada'],
     incluye: ['Alojamiento en carpa', 'Acceso a espacios comunes', 'Cocina compartida', 'Baños', 'Duchas con agua caliente'],
     precio: null,
     precioUnidad: 'por noche',
@@ -162,29 +163,29 @@ const faq = (orden: number, slug: string, pregunta: string, respuesta: string): 
 
 export const preguntasFrecuentes: PreguntaFrecuente[] = [
   faq(1, 'distancia-playa', '¿A qué distancia está la playa?',
-    '<p>Estamos a pocos pasos de Playa Anaconda, en La Paloma. [completar: minutos a pie]</p>'),
+    '<p>Estamos a pocos pasos de Playa Anaconda, en La Paloma. En 3 minutos caminando llegás a Zanja Honda.</p>'),
   faq(2, 'electricidad', '¿Hay electricidad en las carpas?',
-    '<p>[completar]</p>'),
+    '<p>Las carpas no cuentan con electricidad. Hay un sector específico para cargar celulares y demás dispositivos electrónicos.</p>'),
   faq(3, 'cocina-compartida', '¿Cómo es la cocina compartida?',
-    '<p>Es una cocina equipada, con heladera y cocina de uso común para todos los huéspedes.</p>'),
+    '<p>Es una cocina equipada totalmente, con implementos de cocina variados. Cuenta con heladera y anafes de uso común para todos los huéspedes.</p>'),
   faq(4, 'agua-caliente', '¿Hay agua caliente?',
-    '<p>Sí. Tanto la ducha interior como la exterior tienen agua caliente.</p>'),
-  faq(5, 'cocinar', '¿Se puede cocinar?',
-    '<p>Sí, en la cocina compartida. [completar: si hay parrilla o fogón de uso común]</p>'),
-  faq(6, 'mascotas', '¿Puedo ir con mi mascota?',
-    '<p>[completar]</p>'),
-  faq(7, 'sin-auto', '¿Cómo llego sin auto?',
-    '<p>[completar]</p>'),
-  faq(8, 'estacionamiento', '¿Hay estacionamiento?',
-    '<p>[completar]</p>'),
-  faq(9, 'como-funciona-reserva', '¿Cómo funciona la reserva?',
-    '<p>Elegís fechas, cantidad de personas y tipo de alojamiento, y nos mandás una solicitud con tus datos. No es una reserva confirmada todavía: la revisamos a mano y te escribimos para confirmar disponibilidad y detalles.</p>'),
-  faq(10, 'si-llueve', '¿Qué pasa si llueve?',
-    '<p>Los espacios comunes están techados, así que siempre hay un lugar a resguardo para cocinar, leer o tomar unos mates. [completar: política de cambios por lluvia]</p>'),
+    '<p>Sí, contamos con agua caliente en la ducha.</p>'),
+  faq(5, 'mascotas', '¿Puedo ir con mi mascota?',
+    '<p>Contamos con algunos cupos para mascotas, pero evaluamos el caso antes, según disponibilidad y comportamiento del animal.</p>'),
+  faq(6, 'sin-auto', '¿Cómo llego sin auto?',
+    '<p>Podemos coordinar tu llegada con un taxi o remise.</p>'),
+  faq(7, 'estacionamiento', '¿Hay estacionamiento?',
+    '<p>Sí, contamos con estacionamiento exterior abierto. No cuenta con sombra.</p>'),
+  faq(8, 'como-funciona-reserva', '¿Cómo funciona la reserva?',
+    '<p>Elegís fechas, cantidad de personas y tipo de alojamiento, y nos mandás una solicitud con tus datos. No es una reserva confirmada todavía: la revisamos manualmente y nos comunicamos para confirmar disponibilidad. Luego de esto solicitamos la seña del 20% de la estadía para que la reserva quede efectuada.</p>'),
+  faq(9, 'si-llueve', '¿Qué pasa si llueve?',
+    '<p>Los espacios comunes están techados, así que siempre hay un lugar a resguardo para cocinar, leer o tomar unos mates.</p>'),
 ];
 
 // ── Colección: recomendaciones-la-paloma (MARKETING) ────────────────────────
 // Ejemplos de forma. [completar: las recomendaciones reales las carga el equipo]
+// Lista de lugares provista por el cliente.
+// [completar: las descripciones y fotos las carga el equipo]
 export const recomendaciones: Recomendacion[] = [
   {
     id: 'rec-playa-anaconda',
@@ -196,39 +197,103 @@ export const recomendaciones: Recomendacion[] = [
     orden: 1,
   },
   {
-    id: 'rec-faro',
-    slug: 'faro-cabo-santa-maria',
-    nombre: 'Faro del Cabo Santa María',
-    tipo: 'actividad',
-    descripcion: 'El faro de La Paloma. [completar: recomendación del equipo]',
+    id: 'rec-playa-la-balconada',
+    slug: 'playa-la-balconada',
+    nombre: 'Playa La Balconada',
+    tipo: 'playa',
+    descripcion: '[completar: recomendación del equipo]',
     imagen: '',
     orden: 2,
   },
   {
-    id: 'rec-surf',
-    slug: 'surf-la-paloma',
-    nombre: 'Surf en La Paloma',
-    tipo: 'actividad',
-    descripcion: 'La costa de La Paloma tiene olas para distintos niveles. [completar: escuelas o alquiler recomendados]',
-    imagen: F('surf'),
+    id: 'rec-playa-los-botes',
+    slug: 'playa-los-botes',
+    nombre: 'Playa Los Botes',
+    tipo: 'playa',
+    descripcion: '[completar: recomendación del equipo]',
+    imagen: '',
     orden: 3,
   },
+  {
+    id: 'rec-playa-el-cabito',
+    slug: 'playa-el-cabito',
+    nombre: 'Playa El Cabito',
+    tipo: 'playa',
+    descripcion: '[completar: recomendación del equipo]',
+    imagen: '',
+    orden: 4,
+  },
+  {
+    id: 'rec-playa-la-serena',
+    slug: 'playa-la-serena',
+    nombre: 'Playa La Serena',
+    tipo: 'playa',
+    descripcion: '[completar: recomendación del equipo]',
+    imagen: '',
+    orden: 5,
+  },
+  {
+    id: 'rec-la-laguna',
+    slug: 'la-laguna',
+    nombre: 'La Laguna',
+    tipo: 'playa',
+    descripcion: '[completar: recomendación del equipo]',
+    imagen: '',
+    orden: 6,
+  },
+  {
+    id: 'rec-bahia-chica',
+    slug: 'bahia-chica',
+    nombre: 'Bahía Chica',
+    tipo: 'playa',
+    descripcion: '[completar: recomendación del equipo]',
+    imagen: '',
+    orden: 7,
+  },
+  {
+    id: 'rec-bahia-grande',
+    slug: 'bahia-grande',
+    nombre: 'Bahía Grande',
+    tipo: 'playa',
+    descripcion: '[completar: recomendación del equipo]',
+    imagen: '',
+    orden: 8,
+  },
+  {
+    id: 'rec-skatepark',
+    slug: 'skatepark',
+    nombre: 'Skatepark',
+    tipo: 'actividad',
+    descripcion: '[completar: recomendación del equipo]',
+    imagen: '',
+    orden: 9,
+  },
+  {
+    id: 'rec-puerto',
+    slug: 'puerto',
+    nombre: 'Puerto',
+    tipo: 'actividad',
+    descripcion: '[completar: recomendación del equipo]',
+    imagen: '',
+    orden: 10,
+  },
 ];
+
 
 // ── Extensiones (no están en DATA.md) ───────────────────────────────────────
 export const extensiones: Extensiones = {
   secciones: {
     introduccion: { titulo: 'Descansar cerca del mar' },
-    ubicacion: { titulo: 'En La Paloma, a pasos de Playa Anaconda' },
+    ubicacion: { titulo: 'En La Paloma, Playa Anaconda' },
     alojamiento: {
-      titulo: 'Opciones de alojamiento en La Paloma',
-      bajada: 'Dos formas de vivir el mismo lugar: con tu carpa o con una que ya te espera armada.',
+      titulo: 'Opciones de alojamiento',
+      bajada: 'Dos formas de vivir el mismo lugar: con tu propia carpa o con una que ya te espera armada.',
     },
     predio: {
       titulo: 'Recorré el predio',
       bajada: 'Mostrá u ocultá cada capa para ver cómo está distribuido el espacio.',
     },
-    instalaciones: { titulo: 'Instalaciones' },
+    instalaciones: { titulo: 'Espacios' },
     experiencias: { titulo: 'Experiencias' },
     recomendaciones: {
       titulo: 'La Paloma: lo que te recomendamos',
@@ -243,9 +308,9 @@ export const extensiones: Extensiones = {
   experiencias: [
     {
       id: 'mar',
-      titulo: 'Mar',
-      descripcion: 'Playa Anaconda a pocos pasos: olas, caminatas por la orilla y atardeceres largos.',
-      detalles: ['Surf (pack surf opcional)', 'Playa', 'Caminatas', 'Atardeceres'],
+      titulo: 'Conexión con el mar',
+      descripcion: 'Playa Anaconda a pocos pasos: olas, caminatas por la orilla y atardeceres que caen en el mar.',
+      detalles: ['Clases de surf: para todos los niveles', 'Playa', 'Caminatas', 'Atardeceres'],
       foto: F('surf'),
     },
     {
@@ -258,7 +323,7 @@ export const extensiones: Extensiones = {
     {
       id: 'descanso',
       titulo: 'Descanso',
-      descripcion: 'Una hamaca, un libro, la siesta que no tenés en la ciudad.',
+      descripcion: 'Una hamaca, un libro, dormir con el sonido del mar.',
       detalles: ['Leer', 'Dormir', 'Desconectar'],
       foto: F('espaciocomunfuera1'),
     },

@@ -23,7 +23,7 @@ export function AlojamientoCard({ alojamiento: a, ext }: { alojamiento: Alojamie
 
       <h3 id={idTitulo} className="mt-5">{a.nombre}</h3>
       <p className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-tinta-suave">
-        <span>{a.capacidad === 1 ? 'Para 1 persona' : `Hasta ${a.capacidad} personas`}</span>
+        <span>{a.etiquetaCapacidad ?? (a.capacidad === 1 ? 'Para 1 persona' : `Hasta ${a.capacidad} personas`)}</span>
         <span className="font-semibold text-eucalipto">{textoPrecio(a)}</span>
       </p>
       <RichText html={a.descripcion} className="mt-4" />
