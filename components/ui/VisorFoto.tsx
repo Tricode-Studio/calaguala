@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { optimizable } from './Img';
 
 interface Abierta {
   src: string;
@@ -86,7 +87,11 @@ export function VisorFoto() {
           {/* Ruta original, no la miniatura: el optimizador sirve el tamaño grande. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={`/_next/image?url=${encodeURIComponent(abierta.src)}&w=1920&q=80`}
+            src={
+              optimizable(abierta.src)
+                ? `/_next/image?url=${encodeURIComponent(abierta.src)}&w=1920&q=80`
+                : abierta.src
+            }
             alt={abierta.alt}
             className="max-h-[80vh] w-auto max-w-full rounded-foto object-contain"
           />

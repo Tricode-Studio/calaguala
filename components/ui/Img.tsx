@@ -14,7 +14,8 @@ const HOST_CMS = (() => {
   }
 })();
 
-function optimizable(src: ImageProps['src']): boolean {
+/** ¿Puede pasar por el optimizador de Next? (locales y del storage del CMS). */
+export function optimizable(src: ImageProps['src']): boolean {
   if (typeof src !== 'string' || src.startsWith('/')) return true;
   try {
     const url = new URL(src);
