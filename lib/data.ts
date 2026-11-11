@@ -90,7 +90,7 @@ export const landingConfig: LandingConfig = {
   },
   contacto: {
     whatsapp: '', // [completar: número con código de país, solo dígitos. Ej: 59899123456]
-    instagramUrl: 'https://www.instagram.com/', // [completar: perfil de Calaguala]
+    instagramUrl: 'https://www.instagram.com/calagualacamp/',
     mensajeFinal: '¿Nos vemos en La Paloma?',
   },
   seoGlobal: {
