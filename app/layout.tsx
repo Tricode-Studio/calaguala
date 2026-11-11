@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Figtree, Young_Serif } from 'next/font/google';
 import { getLandingConfig } from '@/lib/cms';
 import { VisorFoto } from '@/components/ui/VisorFoto';
+import { CreditoTricode } from '@/components/CreditoTricode';
 import './globals.css';
 
 // next/font: self-hosting + preload + font-display: swap
@@ -58,6 +59,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="es" className={`${youngSerif.variable} ${figtree.variable}`}>
       <body>
         {children}
+        <CreditoTricode />
         <VisorFoto />
       </body>
     </html>
