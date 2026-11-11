@@ -15,6 +15,8 @@ export interface Alojamiento {
   /** RICH_TEXT (HTML) */
   descripcion: string;
   capacidad: number;
+  /** Cuántos de este tipo se pueden ocupar a la vez (disponibilidad). Default 1. */
+  cupos?: number;
   /** Reemplaza el texto de capacidad en la tarjeta (ej. 'Tarifa por persona'). */
   etiquetaCapacidad?: string;
   /** Unidades con nombre propio dentro del mismo tipo de alojamiento. */

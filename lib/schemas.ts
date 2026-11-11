@@ -2,63 +2,6 @@ import { z } from 'zod';
 import { hoyISO } from './fechas';
 
 // ════════════════════════════════════════════════════════════════════════
-// Contenido del CMS — se valida al recibirlo; si no cumple, se usa data.ts
-// ════════════════════════════════════════════════════════════════════════
-const texto = z.string();
-const listaTextos = z.array(z.string());
-
-export const alojamientoSchema = z.object({
-  id: z.string().min(1),
-  slug: z.string().min(1),
-  nombre: texto,
-  tipo: z.enum(['carpa', 'glamping-solo', 'glamping-doble']),
-  descripcion: texto,
-  capacidad: z.number().int().positive(),
-  etiquetaCapacidad: texto.optional(),
-  variantes: z.array(z.object({ nombre: texto, foto: texto })).optional(),
-  caracteristicas: listaTextos,
-  incluye: listaTextos,
-  precio: z.number().nullable(),
-  precioUnidad: texto,
-  fotos: listaTextos,
-  orden: z.number(),
-});
-
-export const preguntaFrecuenteSchema = z.object({
-  id: z.string().min(1),
-  slug: z.string().min(1),
-  pregunta: texto,
-  respuesta: texto,
-  orden: z.number(),
-});
-
-export const recomendacionSchema = z.object({
-  id: z.string().min(1),
-  slug: z.string().min(1),
-  nombre: texto,
-  tipo: z.enum(['playa', 'restaurante', 'actividad', 'otro']),
-  descripcion: texto,
-  imagen: texto,
-  imagenes: z.array(texto).optional(),
-  orden: z.number(),
-});
-
-/** Cada singleton se valida por separado: si uno viene roto, solo ese cae al fallback. */
-export const singletonSchemas = {
-  heroConfig: z.object({ titulo: texto, subtitulo: texto, imagenFondo: texto, videoFondo: texto.optional() }),
-  introduccion: z.object({ texto, imagenApoyo: texto }),
-  ubicacion: z.object({ direccion: texto, mapaEmbedUrl: texto, imagenDrone: texto }),
-  instalaciones: z.object({
-    items: z.array(z.object({ titulo: texto, descripcion: texto, icono: texto })),
-  }),
-  queIncluye: z.object({ items: listaTextos }),
-  reservasInfo: z.object({ textoExplicativo: texto, avisoSolicitud: texto }),
-  informacionPractica: z.object({ checkIn: texto, checkOut: texto, queTraer: listaTextos, normas: listaTextos }),
-  contacto: z.object({ whatsapp: texto, instagramUrl: texto, mensajeFinal: texto }),
-  seoGlobal: z.object({ metaTitle: texto, metaDescription: texto, ogImage: texto }),
-} as const;
-
-// ════════════════════════════════════════════════════════════════════════
 // Formulario de solicitud de reserva
 // ════════════════════════════════════════════════════════════════════════
 const fechaISO = /^\d{4}-\d{2}-\d{2}$/;

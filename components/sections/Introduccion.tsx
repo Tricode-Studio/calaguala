@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Image from '@/components/ui/Img';
 import { altDe } from '@/lib/alt';
 import type { Extensiones, Introduccion as TIntro } from '@/lib/types';
 import { TiraFotos } from '../ui/TiraFotos';
