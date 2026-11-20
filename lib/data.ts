@@ -22,6 +22,8 @@ export const landingConfig: LandingConfig = {
     titulo: 'Un lugar para bajar el ritmo.',
     subtitulo: 'Camping & Glamping en La Paloma, a pocos pasos del mar',
     imagenFondo: F('portada'),
+    botonPrincipal: 'Solicitá tu reserva',
+    botonSecundario: 'Conocé el espacio',
   },
   introduccion: {
     // Copy provisto por el cliente. [completar: el brief lo trae cortado con "..."]
@@ -37,6 +39,9 @@ export const landingConfig: LandingConfig = {
       'https://www.google.com/maps?q=Playa+Anaconda,+La+Paloma,+Rocha,+Uruguay&z=15&output=embed',
     mapaUrl: 'https://maps.app.goo.gl/SAz42XAB879cCEqL9',
     imagenDrone: F('descansarcercadelmar2'),
+    texto:
+      'Estamos en La Paloma, Playa Anaconda. Salís del predio y a tres cuadras estás con los pies en la arena.',
+    botonMapa: 'Ver la ubicación en Google Maps',
   },
   instalaciones: {
     items: [
@@ -64,6 +69,13 @@ export const landingConfig: LandingConfig = {
     textoExplicativo:
       '<p>Contanos cuándo querés venir y cómo te gustaría quedarte. Revisamos cada solicitud y te respondemos para confirmar fechas y detalles.</p>',
     avisoSolicitud: 'Esto es una solicitud, no una reserva confirmada.',
+    boton: 'Solicitá tu reserva',
+    pasos: [
+      'Elegís fechas, cantidad de personas y tipo de alojamiento.',
+      'Te mostramos las opciones posibles para esas fechas.',
+      'Dejás tus datos y lo que necesites contarnos.',
+      'Enviás la solicitud y te respondemos para confirmar.',
+    ],
   },
   informacionPractica: {
     checkIn: '14.00',
@@ -90,7 +102,7 @@ export const landingConfig: LandingConfig = {
     metaTitle: 'Calaguala — Camping & Glamping en La Paloma, a pasos del mar',
     metaDescription:
       'Camping y glamping en La Paloma, Uruguay, a pasos de Playa Anaconda. Descansá entre naturaleza y mar. Consultá disponibilidad.',
-    ogImage: F('portada'),
+    ogImage: '/fotos/og.jpg', // 1200x630, liviana: la foto de la portada pesaba demasiado para redes
   },
 };
 
@@ -319,6 +331,10 @@ export const recomendaciones: Recomendacion[] = [
 
 // ── Extensiones (no están en DATA.md) ───────────────────────────────────────
 export const extensiones: Extensiones = {
+  reservar: {
+    titulo: 'Solicitá tu reserva',
+    bajada: 'Camping & Glamping en La Paloma, a pocos pasos de Playa Anaconda.',
+  },
   secciones: {
     introduccion: { titulo: 'Descansar cerca del mar' },
     ubicacion: { titulo: 'Playa Anaconda' },

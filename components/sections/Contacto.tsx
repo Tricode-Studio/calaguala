@@ -15,7 +15,7 @@ export function Contacto({ contacto, ubicacion, ext }: { contacto: TContacto; ub
           ) : null}
           <a href={contacto.instagramUrl} target="_blank" rel="noopener noreferrer" className="boton boton-secundario">Instagram</a>
         </div>
-        <address className="mt-20 border-t border-cal/20 pt-6 text-paso not-italic text-cal/75">
+        <address className="mt-20 border-t border-cal/20 pt-6 text-paso not-italic text-cal/90">
           {ext.negocio.nombre}, camping &amp; glamping. {ubicacion.direccion}
         </address>
       </div>

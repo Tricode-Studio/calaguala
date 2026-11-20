@@ -24,8 +24,8 @@ export default async function ReservarPage({ searchParams }: { searchParams: Pro
     <>
       <SiteHeader />
       <main className="contenedor max-w-[46rem] py-12 md:py-20">
-        <h1 className="text-h2">Solicitá tu reserva</h1>
-        <p className="mt-3 mb-10 text-lead text-tinta-suave">Camping & Glamping en La Paloma, a pocos pasos de Playa Anaconda.</p>
+        <h1 className="text-h2">{ext.reservar.titulo}</h1>
+        <p className="mt-3 mb-10 text-lead text-tinta-suave">{ext.reservar.bajada}</p>
         <FlujoReserva
           tipoInicialId={tipoInicialId}
           config={{

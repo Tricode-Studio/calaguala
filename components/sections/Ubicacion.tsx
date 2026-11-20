@@ -8,10 +8,7 @@ export function Ubicacion({ ubicacion, ext }: { ubicacion: TUbicacion; ext: Exte
       <div className="contenedor grid gap-10 md:grid-cols-[minmax(0,4fr)_minmax(0,7fr)]">
         <div>
           <SeccionEncabezado id="h-ubicacion" titulo={titulo} bajada={bajada} />
-          <p className="prosa">
-            Estamos en La Paloma, Playa Anaconda. Salís del predio y a tres
-            cuadras estás con los pies en la arena.
-          </p>
+          <p className="prosa">{ubicacion.texto}</p>
           {ubicacion.mapaUrl ? (
             <a
               href={ubicacion.mapaUrl}
@@ -19,7 +16,7 @@ export function Ubicacion({ ubicacion, ext }: { ubicacion: TUbicacion; ext: Exte
               rel="noreferrer"
               className="boton boton-secundario mt-6 text-tinta"
             >
-              Ver la ubicación en Google Maps
+              {ubicacion.botonMapa}
             </a>
           ) : null}
         </div>

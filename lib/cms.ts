@@ -223,6 +223,25 @@ const experienciaCms = base.extend({
 });
 
 const portadaCms = z.object({
+  // Textos del sitio (todos opcionales: vacío = se usa el texto local de lib/data.ts).
+  herobotonprincipal: textoOpc,
+  herobotonsecundario: textoOpc,
+  introtitulo: textoOpc,
+  alojamientotitulo: textoOpc,
+  alojamientobajada: textoOpc,
+  espaciostitulo: textoOpc,
+  espaciosbajada: textoOpc,
+  experienciastitulo: textoOpc,
+  experienciasbajada: textoOpc,
+  descubrirtitulo: textoOpc,
+  descubrirbajada: textoOpc,
+  reservastitulo: textoOpc,
+  reservasboton: textoOpc,
+  reservaspasos: lineas,
+  infopracticatitulo: textoOpc,
+  faqtitulo: textoOpc,
+  reservartitulo: textoOpc,
+  reservarbajada: textoOpc,
   titulo: textoOpc,
   subtitulo: textoOpc,
   imagenfondo: fotos,
@@ -246,6 +265,10 @@ const infoCms = z.object({
 
 const contactoCms = z.object({
   direccion: texto,
+  ubicaciontitulo: textoOpc,
+  ubicacionbajada: textoOpc,
+  ubicaciontexto: textoOpc,
+  ubicacionboton: textoOpc,
   mapaembedurl: textoOpc,
   mapaurl: textoOpc,
   imagendrone: fotos,
@@ -358,6 +381,8 @@ export async function getLandingConfig(): Promise<LandingConfig> {
           titulo: o(portada.titulo, L.heroConfig.titulo),
           subtitulo: o(portada.subtitulo, L.heroConfig.subtitulo),
           imagenFondo: o(portada.imagenfondo[0], L.heroConfig.imagenFondo),
+          botonPrincipal: o(portada.herobotonprincipal, L.heroConfig.botonPrincipal),
+          botonSecundario: o(portada.herobotonsecundario, L.heroConfig.botonSecundario),
         }
       : L.heroConfig,
     introduccion: portada
@@ -373,12 +398,12 @@ export async function getLandingConfig(): Promise<LandingConfig> {
           ogImage: o(portada.ogimage[0], L.seoGlobal.ogImage),
         }
       : L.seoGlobal,
-    reservasInfo: info
-      ? {
-          textoExplicativo: o(info.reservastexto, L.reservasInfo.textoExplicativo),
-          avisoSolicitud: o(info.avisosolicitud, L.reservasInfo.avisoSolicitud),
-        }
-      : L.reservasInfo,
+    reservasInfo: {
+      textoExplicativo: o(info?.reservastexto, L.reservasInfo.textoExplicativo),
+      avisoSolicitud: o(info?.avisosolicitud, L.reservasInfo.avisoSolicitud),
+      boton: o(portada?.reservasboton, L.reservasInfo.boton),
+      pasos: portada?.reservaspasos.length ? portada.reservaspasos : L.reservasInfo.pasos,
+    },
     informacionPractica: info
       ? {
           checkIn: o(info.checkin, L.informacionPractica.checkIn),
@@ -393,6 +418,8 @@ export async function getLandingConfig(): Promise<LandingConfig> {
           mapaEmbedUrl: o(contacto.mapaembedurl, L.ubicacion.mapaEmbedUrl),
           mapaUrl: o(contacto.mapaurl, L.ubicacion.mapaUrl),
           imagenDrone: o(contacto.imagendrone[0], L.ubicacion.imagenDrone),
+          texto: o(contacto.ubicaciontexto, L.ubicacion.texto),
+          botonMapa: o(contacto.ubicacionboton, L.ubicacion.botonMapa),
         }
       : L.ubicacion,
     contacto: contacto
@@ -420,14 +447,52 @@ export async function getLandingConfig(): Promise<LandingConfig> {
  */
 export async function getExtensiones(): Promise<Extensiones> {
   const X = local.extensiones;
-  const [experiencias, instalaciones, portada, info] = await Promise.all([
+  const [experiencias, instalaciones, portada, info, contacto] = await Promise.all([
     coleccion('experiencias', experienciaCms),
     coleccion('instalaciones', instalacionCms),
     registro('portada', portadaCms),
     registro('informacion-huespedes', infoCms),
+    registro('ubicacion-contacto', contactoCms),
   ]);
+  // Títulos y bajadas editables (vacío = texto local). La bajada puede no existir.
+  const bajadaOpc = (v: string | undefined, r: string | undefined) => (v?.trim() ? v : r);
+  const S = X.secciones;
   return {
     ...X,
+    secciones: {
+      ...S,
+      introduccion: { ...S.introduccion, titulo: o(portada?.introtitulo, S.introduccion.titulo) },
+      ubicacion: {
+        titulo: o(contacto?.ubicaciontitulo, S.ubicacion.titulo),
+        bajada: bajadaOpc(contacto?.ubicacionbajada, S.ubicacion.bajada),
+      },
+      alojamiento: {
+        titulo: o(portada?.alojamientotitulo, S.alojamiento.titulo),
+        bajada: bajadaOpc(portada?.alojamientobajada, S.alojamiento.bajada),
+      },
+      instalaciones: {
+        titulo: o(portada?.espaciostitulo, S.instalaciones.titulo),
+        bajada: bajadaOpc(portada?.espaciosbajada, S.instalaciones.bajada),
+      },
+      experiencias: {
+        titulo: o(portada?.experienciastitulo, S.experiencias.titulo),
+        bajada: bajadaOpc(portada?.experienciasbajada, S.experiencias.bajada),
+      },
+      recomendaciones: {
+        titulo: o(portada?.descubrirtitulo, S.recomendaciones.titulo),
+        bajada: bajadaOpc(portada?.descubrirbajada, S.recomendaciones.bajada),
+      },
+      reservas: { ...S.reservas, titulo: o(portada?.reservastitulo, S.reservas.titulo) },
+      'informacion-practica': {
+        ...S['informacion-practica'],
+        titulo: o(portada?.infopracticatitulo, S['informacion-practica'].titulo),
+      },
+      faq: { ...S.faq, titulo: o(portada?.faqtitulo, S.faq.titulo) },
+    },
+    reservar: {
+      titulo: o(portada?.reservartitulo, X.reservar.titulo),
+      bajada: o(portada?.reservarbajada, X.reservar.bajada),
+    },
     experiencias: experiencias
       ? [...experiencias].sort(porOrden).map(
           (e): Experiencia => ({

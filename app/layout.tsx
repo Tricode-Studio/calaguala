@@ -37,14 +37,13 @@ export async function generateMetadata(): Promise<Metadata> {
       'camping frente al mar Uruguay',
     ],
     alternates: { canonical: '/' },
-    icons: { icon: '/icon.png', apple: '/apple-icon.png' },
     openGraph: {
       type: 'website',
       locale: 'es_UY',
       siteName: 'Calaguala',
       title: seoGlobal.metaTitle,
       description: seoGlobal.metaDescription,
-      images: [{ url: seoGlobal.ogImage }],
+      images: [{ url: seoGlobal.ogImage, width: 1200, height: 630, alt: 'Calaguala, camping y glamping en La Paloma' }],
     },
     twitter: { card: 'summary_large_image' },
   };

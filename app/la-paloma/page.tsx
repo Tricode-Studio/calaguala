@@ -23,7 +23,7 @@ function Hueco({ aspecto, tono = 'bg-cal/60' }: { aspecto: string; tono?: string
 export default function LaPalomaPage() {
   return (
     <>
-      <SiteHeader sobreFoto />
+      <SiteHeader />
       <main>
         {/* 1 · Hero */}
         <section aria-labelledby="h-paloma" className="sobre-oscuro relative isolate flex min-h-[78svh] items-end overflow-hidden bg-oceano text-cal md:min-h-[88svh]">
@@ -59,7 +59,7 @@ export default function LaPalomaPage() {
                   )}
                   <h3 className="mt-5 text-oceano">{p.nombre}</h3>
                   {p.distancia ? (
-                    <p className="mt-1 text-paso uppercase tracking-wide text-terracota">{p.distancia}</p>
+                    <p className="mt-1 text-paso uppercase tracking-wide text-tinta-suave">{p.distancia}</p>
                   ) : null}
                   <p className="mt-2 text-tinta">{p.texto}</p>
                 </li>

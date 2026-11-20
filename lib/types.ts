@@ -60,6 +60,10 @@ export interface HeroConfig {
   subtitulo: string;
   imagenFondo: string;
   videoFondo?: string;
+  /** Texto del botón principal (lleva a /reservar). */
+  botonPrincipal: string;
+  /** Texto del botón secundario (baja a la introducción). */
+  botonSecundario: string;
 }
 export interface Introduccion {
   texto: string;
@@ -71,6 +75,10 @@ export interface Ubicacion {
   /** Enlace para abrir la ubicación en la app de mapas. */
   mapaUrl: string;
   imagenDrone: string;
+  /** Frase del bloque de ubicación, debajo del título. */
+  texto: string;
+  /** Texto del botón que abre el mapa. */
+  botonMapa: string;
 }
 export interface ItemInstalacion {
   titulo: string;
@@ -83,6 +91,10 @@ export interface Instalaciones {
 export interface ReservasInfo {
   textoExplicativo: string;
   avisoSolicitud: string;
+  /** Texto del botón de la sección Reservas. */
+  boton: string;
+  /** Los pasos numerados del proceso. */
+  pasos: string[];
 }
 export interface InformacionPractica {
   checkIn: string;
@@ -143,6 +155,8 @@ export interface Extensiones {
   /** DATA.md guarda fotos como URL sola; acá viven los textos alternativos. */
   altFotos: Record<string, string>;
   tiempoRespuesta: string;
+  /** Encabezado de la página /reservar. */
+  reservar: { titulo: string; bajada: string };
   negocio: {
     nombre: string;
     localidad: string;

@@ -1,8 +1,14 @@
+'use client';
+
+import { usePathname } from 'next/navigation';
 import { linkWhatsApp } from '@/lib/whatsapp';
 import { IconoWhatsApp } from './ui/Iconos';
 
 export function WhatsAppFlotante({ numero }: { numero: string }) {
+  const pathname = usePathname();
   const href = linkWhatsApp(numero, 'Hola, quería hacer una consulta sobre Calaguala.');
+  // /reservar ya tiene su propio "Enviar por WhatsApp" y el botón tapaba los controles del formulario.
+  if (pathname === '/reservar' || pathname?.startsWith('/reservar/')) return null;
   if (!href) return null; // sin número cargado en el CMS no mostramos un link roto
   return (
     <a

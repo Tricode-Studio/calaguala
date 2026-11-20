@@ -103,9 +103,9 @@ function Flecha({ lado, onClick, oculta }: { lado: 'izquierda' | 'derecha'; onCl
       type="button"
       onClick={onClick}
       aria-label={izq ? 'Foto anterior' : 'Foto siguiente'}
-      className={`absolute top-1/2 z-10 hidden size-10 -translate-y-1/2 place-items-center rounded-full bg-cal/90 text-tinta shadow-md transition hover:bg-cal md:grid ${
+      className={`absolute top-1/2 z-10 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-cal/90 text-tinta shadow-md transition hover:bg-cal ${
         izq ? 'left-2' : 'right-2'
-      } ${oculta ? 'pointer-events-none opacity-0' : 'opacity-0 group-hover:opacity-100 group-focus-within:opacity-100'}`}
+      } ${oculta ? 'pointer-events-none opacity-0' : 'opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100'}`}
     >
       <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
         <path d={izq ? 'M15 5l-7 7 7 7' : 'M9 5l7 7-7 7'} />

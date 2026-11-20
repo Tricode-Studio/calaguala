@@ -161,6 +161,41 @@ export function VisorFoto() {
     return () => window.removeEventListener('keydown', alTeclado);
   }, [abierta, mover]);
 
+  // Bloquea el scroll de la página de fondo mientras el visor está abierto.
+  const estaAbierta = abierta !== null;
+  useEffect(() => {
+    if (!estaAbierta) return;
+    const html = document.documentElement;
+    const previo = html.style.overflow;
+    const paddingPrevio = html.style.paddingRight;
+    // Con barra de scroll clásica, al ocultarla la página saltaría: se compensa su ancho.
+    const anchoBarra = window.innerWidth - html.clientWidth;
+    if (anchoBarra > 0) html.style.paddingRight = `${anchoBarra}px`;
+    html.style.overflow = 'hidden';
+    return () => {
+      html.style.overflow = previo;
+      html.style.paddingRight = paddingPrevio;
+    };
+  }, [estaAbierta]);
+
+  // Swipe horizontal en pantallas táctiles: pasa de foto (umbral 50 px; un
+  // gesto más vertical que horizontal se ignora). No interfiere con los botones.
+  const toque = useRef<{ x: number; y: number } | null>(null);
+  const alIniciarToque = (e: React.TouchEvent) => {
+    const t = e.touches[0];
+    const sobreBoton = (e.target as HTMLElement).closest('button');
+    toque.current = t && !sobreBoton && e.touches.length === 1 ? { x: t.clientX, y: t.clientY } : null;
+  };
+  const alTerminarToque = (e: React.TouchEvent) => {
+    const ini = toque.current;
+    toque.current = null;
+    const t = e.changedTouches[0];
+    if (!ini || !t) return;
+    const dx = t.clientX - ini.x;
+    const dy = t.clientY - ini.y;
+    if (Math.abs(dx) >= 50 && Math.abs(dx) > Math.abs(dy) * 1.5) mover(dx < 0 ? 1 : -1);
+  };
+
   const varias = (abierta?.grupo.length ?? 0) > 1;
 
   return (
@@ -173,23 +208,25 @@ export function VisorFoto() {
         if (el?.isConnected) el.focus({ preventScroll: true });
       }}
       onClick={(e) => { if (e.target === dialogo.current) setAbierta(null); }}
+      onTouchStart={varias ? alIniciarToque : undefined}
+      onTouchEnd={varias ? alTerminarToque : undefined}
       aria-label="Foto ampliada"
       className="visor"
     >
       {abierta ? (
-        <div className="relative flex max-h-[90vh] max-w-[92vw] flex-col items-center gap-3">
+        <div className="visor-caja">
           <FotoAmpliada key={abierta.src} src={abierta.src} alt={abierta.alt} miniatura={abierta.miniaturas[abierta.indice]} />
-          {abierta.alt ? <p className="max-w-prose text-center text-paso text-cal/90">{abierta.alt}</p> : null}
+          {abierta.alt ? <p className="visor-pie max-w-prose text-center text-paso text-cal/90">{abierta.alt}</p> : null}
 
-          <button type="button" onClick={() => setAbierta(null)} aria-label="Cerrar" className="visor-boton absolute -top-2 right-0 -translate-y-full">
+          <button type="button" onClick={() => setAbierta(null)} aria-label="Cerrar" className="visor-boton visor-cerrar">
             <Cruz />
           </button>
           {varias ? (
             <>
-              <button type="button" onClick={() => mover(-1)} aria-label="Foto anterior" className="visor-boton absolute left-2 top-1/2 -translate-y-1/2">
+              <button type="button" onClick={() => mover(-1)} aria-label="Foto anterior" className="visor-boton visor-flecha visor-flecha-izq">
                 <Punta izquierda />
               </button>
-              <button type="button" onClick={() => mover(1)} aria-label="Foto siguiente" className="visor-boton absolute right-2 top-1/2 -translate-y-1/2">
+              <button type="button" onClick={() => mover(1)} aria-label="Foto siguiente" className="visor-boton visor-flecha visor-flecha-der">
                 <Punta />
               </button>
             </>
@@ -220,7 +257,7 @@ const Punta = ({ izquierda }: { izquierda?: boolean }) => (
  * clases de tamaño (`h-[80vh] w-auto max-w-full object-contain`), así no hay
  * salto de caja cuando llega la grande.
  */
-const CAJA = 'col-start-1 row-start-1 h-[80vh] max-h-[80vh] w-auto max-w-full rounded-foto object-contain';
+const CAJA = 'col-start-1 row-start-1 visor-foto-alto w-auto max-w-full rounded-foto object-contain';
 
 function FotoAmpliada({ src, alt, miniatura }: { src: string; alt: string; miniatura?: string }) {
   const [estado, setEstado] = useState<'carga' | 'ok' | 'error'>('carga');
@@ -270,7 +307,7 @@ function FotoAmpliada({ src, alt, miniatura }: { src: string; alt: string; minia
           className={`${CAJA} blur-md transition-opacity duration-300 ${estado === 'ok' ? 'opacity-0' : 'opacity-100'}`}
         />
       ) : (
-        <div aria-hidden="true" className={`col-start-1 row-start-1 h-[60vh] w-[min(80vw,28rem)] rounded-foto bg-cal/10 ${estado === 'ok' ? 'hidden' : ''}`} />
+        <div aria-hidden="true" className={`col-start-1 row-start-1 h-[60dvh] w-[min(80vw,28rem)] rounded-foto bg-cal/10 ${estado === 'ok' ? 'hidden' : ''}`} />
       )}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
