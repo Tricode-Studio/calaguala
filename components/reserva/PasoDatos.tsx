@@ -9,7 +9,13 @@ import { mensajeSolicitud } from './mensaje';
 import { Spinner } from './PasoSeleccion';
 import { useValidacion } from './useValidacion';
 
-type ErrorEnvio = 'CMS_NO_CONECTADO' | 'CMS_ERROR' | 'RED' | null;
+type ErrorEnvio =
+  | 'CMS_NO_CONECTADO'
+  | 'CMS_ERROR'
+  | 'DEMASIADAS_SOLICITUDES'
+  | 'BODY_DEMASIADO_GRANDE'
+  | 'RED'
+  | null;
 
 export function PasoDatos() {
   const { estado, dispatch, config } = useFlujoReserva();
@@ -28,6 +34,8 @@ export function PasoDatos() {
   const v = useValidacion(schema, d);
   const [enviando, setEnviando] = useState(false);
   const [errorEnvio, setErrorEnvio] = useState<ErrorEnvio>(null);
+  /** Minutos de espera aproximados (cabecera Retry-After del 429), si vino. */
+  const [minutosEspera, setMinutosEspera] = useState<number | null>(null);
   const [erroresServidor, setErroresServidor] = useState<Record<string, string>>({});
 
   const set = (campo: keyof Datos) => (valor: string) => {
@@ -61,6 +69,16 @@ export function PasoDatos() {
         if (json.errores.fechaLlegada || json.errores.fechaSalida || json.errores.tipoAlojamientoId) {
           dispatch({ tipo: 'ir', paso: 1 });
         }
+        return;
+      }
+      if (res.status === 429 || json.codigo === 'DEMASIADAS_SOLICITUDES') {
+        const seg = Number(res.headers.get('Retry-After'));
+        setMinutosEspera(Number.isFinite(seg) && seg > 0 ? Math.ceil(seg / 60) : null);
+        setErrorEnvio('DEMASIADAS_SOLICITUDES');
+        return;
+      }
+      if (res.status === 413 || json.codigo === 'BODY_DEMASIADO_GRANDE') {
+        setErrorEnvio('BODY_DEMASIADO_GRANDE');
         return;
       }
       setErrorEnvio(json.codigo === 'CMS_NO_CONECTADO' ? 'CMS_NO_CONECTADO' : 'CMS_ERROR');
@@ -104,7 +122,11 @@ export function PasoDatos() {
           <p>
             {errorEnvio === 'RED'
               ? 'No se pudo enviar la solicitud: parece que no hay conexión. Tus datos siguen acá, probá de nuevo.'
-              : 'No se pudo enviar la solicitud en este momento. Tus datos siguen acá: probá de nuevo o mandanos lo mismo por WhatsApp.'}
+              : errorEnvio === 'DEMASIADAS_SOLICITUDES'
+                ? `Hiciste varios intentos seguidos. Esperá ${minutosEspera ? `unos ${minutosEspera} ${minutosEspera === 1 ? 'minuto' : 'minutos'}` : 'unos minutos'} y volvé a probar, o mandanos lo mismo por WhatsApp.`
+                : errorEnvio === 'BODY_DEMASIADO_GRANDE'
+                  ? 'Los datos enviados son demasiado largos. Acortá el mensaje e intentá de nuevo.'
+                  : 'No se pudo enviar la solicitud en este momento. Tus datos siguen acá: probá de nuevo o mandanos lo mismo por WhatsApp.'}
           </p>
           {wa ? (
             <a href={wa} target="_blank" rel="noopener noreferrer" className="boton boton-secundario text-[#7d261d]">

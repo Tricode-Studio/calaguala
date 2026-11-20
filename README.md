@@ -30,6 +30,27 @@ componentes ← app/page.tsx ← lib/cms.ts ──fetch──► Tricode CMS
   que no es el del CMS (URL pegada a mano) se muestran sin optimizar en vez de
   romper la página.
 
+## Revalidación a demanda (webhook del CMS)
+
+El contenido del CMS se cachea 300 s. Para verlo al instante después de editar,
+`POST /api/revalidate` invalida la etiqueta `cms` y las rutas `/`, `/la-paloma`
+y `/reservar`. Acepta dos autenticaciones: la firma `X-Tricode-Signature` que
+manda el CMS (verificada con `TRICODE_WEBHOOK_SECRET`, tolerancia de 300 s) o,
+para pruebas, el header `x-revalidate-secret` contra `REVALIDATE_SECRET`. Los
+eventos del CMS que no son `entry.*` se responden `200 {"ignored":true}`.
+
+1. En Tricode CMS: Integraciones → Nuevo webhook.
+2. URL: `https://<dominio>/api/revalidate`. Eventos: `entry.created`,
+   `entry.updated` y `entry.deleted`.
+3. Copiar el secreto que muestra el CMS (se ve una sola vez) a la variable
+   `TRICODE_WEBHOOK_SECRET` en Vercel (Production) y redeployar.
+4. Probar con la entrega de prueba del webhook o mirando el historial de
+   entregas en el CMS: debe figurar `200`. Ojo: un `401` por mala firma cuenta
+   como fallo, y tras 15 fallos seguidos el CMS desactiva el webhook.
+5. Prueba manual (opcional, con `REVALIDATE_SECRET` definida):
+   `curl -X POST -H "x-revalidate-secret: ..." https://<dominio>/api/revalidate`
+   responde `{"revalidated":true}`; sin credenciales o con otro valor, `401`.
+
 ## Antes de publicar
 
 Buscá `[completar` en `lib/data.ts`: son datos que Calaguala tiene que confirmar
@@ -46,7 +67,7 @@ Tenant `calaguala` en `cms.tricode.studio`. La fuente de verdad del modelo es
 |---|---|
 | `alojamientos`, `unidades` | Alojamientos (unidades = variantes), flujo de reserva |
 | `portada` | Hero, introducción y su galería, SEO |
-| `informacion-huespedes` | Qué incluye, reservas, información práctica, plazo de respuesta |
+| `informacion-huespedes` | Reservas, información práctica, plazo de respuesta |
 | `ubicacion-contacto` | Ubicación, contacto, WhatsApp flotante |
 | `instalaciones`, `experiencias` | Espacios (con sus fotos), Experiencias |
 | `recomendaciones-la-paloma`, `preguntas-frecuentes` | Descubrí La Paloma, FAQ |
@@ -55,8 +76,3 @@ Tenant `calaguala` en `cms.tricode.studio`. La fuente de verdad del modelo es
 Siguen locales a propósito (`lib/data.ts`): página `/la-paloma`, títulos de
 sección, textos alternativos de fotos (se resuelven por nombre de archivo,
 también para las fotos subidas al CMS) y datos del negocio del JSON-LD.
-
-## Visor 2.5D
-
-`components/visor-2.5d/predio.ts` tiene la geometría (placeholder ilustrativo).
-Cuando llegue el plano real, se editan solo las coordenadas de `ELEMENTOS` y `ARBOLES`.

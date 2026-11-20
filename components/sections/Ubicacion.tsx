@@ -9,15 +9,15 @@ export function Ubicacion({ ubicacion, ext }: { ubicacion: TUbicacion; ext: Exte
         <div>
           <SeccionEncabezado id="h-ubicacion" titulo={titulo} bajada={bajada} />
           <p className="prosa">
-            Estamos en La Paloma, Playa Anaconda. Salís del predio y a pasos
-            estás con los pies en la arena.
+            Estamos en La Paloma, Playa Anaconda. Salís del predio y a tres
+            cuadras estás con los pies en la arena.
           </p>
           {ubicacion.mapaUrl ? (
             <a
               href={ubicacion.mapaUrl}
               target="_blank"
               rel="noreferrer"
-              className="boton boton-secundario mt-6 text-eucalipto"
+              className="boton boton-secundario mt-6 text-tinta"
             >
               Ver la ubicación en Google Maps
             </a>

@@ -63,8 +63,14 @@ export function GaleriaMarco({
         aria-label={sola ? undefined : etiquetaRegion}
         className="marco-pista size-full"
       >
-        {fotos.map((f) => (
-          <div key={f.src} data-foto={f.src} data-foto-alt={f.alt} className="relative size-full shrink-0 cursor-zoom-in snap-start">
+        {fotos.map((f, i) => (
+          <div key={f.src} data-foto={f.src} data-foto-alt={f.alt}
+            // Roving tabindex: solo la foto visible es parada de tabulación.
+            tabIndex={i === activa ? 0 : -1}
+            role="button"
+            aria-label={f.alt ? `Ampliar foto: ${f.alt}` : 'Ampliar foto'}
+            className="relative size-full shrink-0 cursor-zoom-in snap-start foco-foto"
+          >
             <Image src={f.src} alt={f.alt} fill sizes={sizes} className="object-cover" />
             {f.etiqueta ? (
               <span className="absolute bottom-3 left-3 rounded-full bg-mar/80 px-3 py-1 text-paso font-medium text-cal backdrop-blur-sm">

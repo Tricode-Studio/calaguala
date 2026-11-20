@@ -9,8 +9,6 @@ import { Hero } from '@/components/sections/Hero';
 import { InformacionPractica } from '@/components/sections/InformacionPractica';
 import { Instalaciones } from '@/components/sections/Instalaciones';
 import { Introduccion } from '@/components/sections/Introduccion';
-import { Predio } from '@/components/sections/Predio';
-import { QueIncluye } from '@/components/sections/QueIncluye';
 import { Recomendaciones } from '@/components/sections/Recomendaciones';
 import { Reservas } from '@/components/sections/Reservas';
 import { Ubicacion } from '@/components/sections/Ubicacion';
@@ -37,11 +35,9 @@ export default async function Home() {
         <Instalaciones instalaciones={config.instalaciones} ext={ext} />
         <Experiencias ext={ext} />
         <Recomendaciones items={recomendaciones} ext={ext} />
-        <QueIncluye data={config.queIncluye} ext={ext} />
         <Reservas info={config.reservasInfo} ext={ext} />
         <InformacionPractica info={config.informacionPractica} ext={ext} />
         <Faq items={faq} ext={ext} />
-        <Predio ext={ext} />
       </main>
       <Contacto contacto={config.contacto} ubicacion={config.ubicacion} ext={ext} />
       <WhatsAppFlotante numero={config.contacto.whatsapp} />

@@ -1,34 +1,35 @@
 @import "tailwindcss";
 
 /*
- * Design tokens — paleta sacada de las fotos del predio:
- * tablas pintadas a la cal, arena del piso, eucalipto/olivo,
- * pizarra del mar al atardecer y el lavanda del cielo.
+ * Design tokens. Paleta del cliente (cinco colores base):
+ *   #FAF7F0 fondo · #E8D2B2 arena · #C8785D terracota · #A87950 madera · #2F6675 océano
+ * Los nombres de token son los de siempre (los usan los componentes); solo
+ * cambió el valor. Las variantes marcadas "derivado" salen de los cinco base.
+ * Contraste medido (WCAG): océano sobre fondo 5,99:1, sobre arena 4,36:1;
+ * fondo sobre océano 5,99:1; tinta sobre fondo 11,3:1 y sobre arena 8,2:1.
+ * Terracota (3,1:1) y madera (3,6:1) NO llegan a AA para texto chico: solo
+ * líneas, puntos, fondos y gráficos.
  */
 @theme {
-  /* Paleta definida por el cliente. Los cinco colores base van tal cual;
-     las variantes -suave / -oscura se derivan de ellos. */
-  --color-cal: #F3EFE5;          /* fondo */
-  --color-arena: #D8C8A9;        /* detalles, superficie secundaria */
-  --color-arena-oscura: #BFAC89; /* derivado: bordes sobre arena */
-  --color-eucalipto: #526B4D;    /* botones y CTA */
-  --color-eucalipto-suave: #6B8463; /* derivado: hover y apoyos */
-  --color-acento: #A76F52;       /* acentos */
-  --color-mar: #345068;          /* azul de mar (muestreado de las fotos) */
-  --color-cielo: #7FA9BC;        /* celeste suave, solo decorativo */
-  /* Paleta de la guía de La Paloma. Medido: océano sobre marfil 5,58:1 y
-     tinta sobre playa 8,19:1; terracota y agua no llegan para texto, van
-     solo en líneas, fondos y estados. */
-  --color-playa: #E8D2B2;        /* fondo de las secciones de playa */
-  --color-oceano: #2F6675;       /* títulos, botones, elementos gráficos */
-  --color-agua: #8FC3CC;         /* frescura, solo decorativo */
-  --color-terracota: #C8785D;    /* acento mínimo */
-  --color-madera: #8A6848;       /* elementos gráficos, decks */
-  --color-nieve: #FAF8F2;        /* tarjetas y espacios de contraste */
-  --color-lavanda: #cfc3dc;      /* cielo del atardecer en la ilustración */
-  --color-sol: #e6a13c;          /* disco del sol y foco sobre oscuro */
-  --color-tinta: #263B2D;        /* texto principal */
-  --color-tinta-suave: #4C5A4F;  /* derivado: texto secundario */
+  --color-cal: #FAF7F0;          /* fondo general y texto sobre superficies oscuras */
+  --color-nieve: #FFFEFA;        /* derivado: tarjetas y campos (apenas más claro que el fondo) */
+  --color-arena: #E8D2B2;        /* superficie secundaria, detalles */
+  --color-playa: #E8D2B2;        /* fondo de las secciones de playa (= arena) */
+  --color-arena-oscura: #C9B08A; /* derivado: bordes sobre arena */
+  --color-eucalipto: #2F6675;    /* botones, CTA y títulos (= océano) */
+  --color-oceano: #2F6675;       /* títulos y botones de La Paloma */
+  --color-mar: #2F6675;          /* secciones oscuras (pie, etc.) */
+  --color-oceano-oscuro: #24505C; /* derivado: hover de botones */
+  --color-eucalipto-suave: #3F7585; /* derivado: marcadores y apoyos (4,8:1 sobre el fondo) */
+  --color-cielo: #8FB3BE;        /* derivado: celeste suave, solo decorativo */
+  --color-agua: #8FB3BE;         /* derivado: frescura, solo decorativo */
+  --color-acento: #C8785D;       /* acento (= terracota) */
+  --color-terracota: #C8785D;    /* acento mínimo, solo gráfico */
+  --color-madera: #A87950;       /* elementos gráficos */
+  --color-lavanda: #E8D2B2;      /* (nombre heredado) fondo suave del aviso de solicitud = arena */
+  --color-sol: #E8D2B2;          /* foco y marcas sobre fondo oscuro = arena */
+  --color-tinta: #1E3A43;        /* derivado: texto principal (océano oscurecido) */
+  --color-tinta-suave: #46606A;  /* derivado: texto secundario (6,3:1 sobre el fondo, 4,6:1 sobre arena) */
 
   --font-display: var(--font-young-serif), "Iowan Old Style", Georgia, serif;
   --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
@@ -116,12 +117,12 @@
   }
   .boton:active { transform: translateY(1px); }
   .boton-primario { background: var(--color-eucalipto); color: var(--color-cal); }
-  .boton-primario:hover { background: var(--color-mar); }
+  .boton-primario:hover { background: var(--color-oceano-oscuro); }
   .boton-secundario { box-shadow: inset 0 0 0 1.5px currentColor; }
   .boton-secundario:hover { background: color-mix(in srgb, currentColor 10%, transparent); }
   .boton:disabled { opacity: 0.55; cursor: not-allowed; }
 
-  /* Tira horizontal de fotos verticales (el banco del predio es todo retrato) */
+  /* Tira horizontal de fotos verticales (las fotos de la tira son casi todas de retrato) */
   .tira {
     display: grid;
     grid-auto-flow: column;
@@ -223,6 +224,40 @@
     box-shadow: 0 6px 18px rgb(0 0 0 / 0.3);
   }
   .visor-boton:hover { background: #fff; }
+
+  /* Foco de las fotos ampliables: doble anillo (claro afuera, oscuro adentro)
+     dibujado hacia adentro, visible sobre fotos claras y oscuras y sin recorte
+     por overflow-hidden. Requiere que el elemento sea `relative`. */
+  .foco-foto:focus-visible { outline: none; }
+  .foco-foto:focus-visible::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    box-shadow:
+      inset 0 0 0 3px var(--color-cal),
+      inset 0 0 0 6px var(--color-oceano);
+  }
+
+  /* Indicador de carga de la foto ampliada. Con reduced-motion no gira: queda
+     un anillo fijo con un leve pulso de opacidad. */
+  .spinner-foto {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 9999px;
+    border: 3px solid color-mix(in srgb, var(--color-cal) 30%, transparent);
+    border-top-color: var(--color-arena);
+    animation: girar-foto 0.8s linear infinite;
+  }
+  @keyframes girar-foto { to { transform: rotate(360deg); } }
+  @keyframes pulso-foto { 50% { opacity: 0.45; } }
+  @media (prefers-reduced-motion: reduce) {
+    .spinner-foto {
+      animation: pulso-foto 1.6s ease-in-out infinite !important;
+      animation-duration: 1.6s !important;
+    }
+  }
 
   .campo {
     width: 100%;

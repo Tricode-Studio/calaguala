@@ -28,7 +28,7 @@ export function Reservas({ info, ext }: { info: ReservasInfo; ext: Extensiones }
         <ol className="space-y-6 md:pt-2">
           {pasos.map((p, i) => (
             <li key={p} className="flex gap-5">
-              <span aria-hidden="true" className="grid size-11 shrink-0 place-items-center rounded-full bg-arena font-display text-xl text-eucalipto">
+              <span aria-hidden="true" className="grid size-11 shrink-0 place-items-center rounded-full bg-arena font-display text-xl text-tinta">
                 {i + 1}
               </span>
               <p className="pt-2">{p}</p>

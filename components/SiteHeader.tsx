@@ -3,7 +3,6 @@ import Link from 'next/link';
 
 const enlaces = [
   { href: '/#alojamiento', label: 'Alojamiento' },
-  { href: '/#predio', label: 'El predio' },
   { href: '/#experiencias', label: 'Experiencias' },
   { href: '/la-paloma', label: 'La Paloma' },
   { href: '/#faq', label: 'Preguntas' },

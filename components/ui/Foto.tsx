@@ -15,7 +15,10 @@ export function Foto({ src, alt, aspecto = '9 / 16', sizes = '(min-width: 768px)
     <div
       data-foto={src}
       data-foto-alt={alt}
-      className={`relative cursor-zoom-in overflow-hidden bg-arena ${className}`}
+      tabIndex={0}
+      role="button"
+      aria-label={`Ampliar foto: ${alt}`}
+      className={`relative cursor-zoom-in overflow-hidden foco-foto bg-arena ${className}`}
       style={{ aspectRatio: aspecto }}
     >
       <Image

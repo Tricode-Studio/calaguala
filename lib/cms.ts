@@ -9,6 +9,7 @@
  * (`imagenfondo`), acá se traducen a los tipos de lib/types.ts.
  */
 import 'server-only';
+import { cache } from 'react';
 import { z } from 'zod';
 import * as local from './data';
 import type {
@@ -32,6 +33,9 @@ const TENANT = process.env.NEXT_PUBLIC_TRICODE_TENANT_SLUG;
 const API_KEY = process.env.TRICODE_INTEGRATION_API_KEY;
 
 const REVALIDAR_SEGUNDOS = 300;
+/** Lectura pública del CMS (puede tardar más en frío, p. ej. durante el build). */
+const TIMEOUT_LECTURA_MS = 8000;
+/** Integración (reservas/disponibilidad): más corto, hay un usuario esperando. */
 const TIMEOUT_MS = 4000;
 const LIMITE_PUBLICO = 48; // máximo que acepta la API pública
 
@@ -40,21 +44,48 @@ export const reservasConectadas = Boolean(BASE && API_KEY);
 
 const urlPublica = (ruta: string) => `${BASE}/public/${TENANT}${ruta}`;
 
+/**
+ * Lectura pública. Diseño ante fallos:
+ * - La caché de datos de Next (`revalidate` + stale-while-revalidate) ya conserva
+ *   la última respuesta buena: si hay una entrada cacheada, `fetch` la devuelve y
+ *   la revalida en segundo plano; si esa revalidación falla, sigue sirviendo la
+ *   vieja. Solo se llega al catch sin ninguna respuesta buena previa (primer
+ *   build/arranque en frío) y ahí el llamador usa lib/data.ts.
+ * - Los logs distinguen "sin configurar" de "falló la red/HTTP/timeout".
+ */
 async function getJson(ruta: string, tag: string): Promise<unknown | null> {
-  if (!cmsConectado) return null;
+  if (!cmsConectado) {
+    if (!avisoSinEnv) {
+      avisoSinEnv = true;
+      console.warn(
+        '[cms] SIN CONFIGURAR: faltan NEXT_PUBLIC_TRICODE_API_BASE_URL / NEXT_PUBLIC_TRICODE_TENANT_SLUG; el sitio usa lib/data.ts (modo standalone).',
+      );
+    }
+    return null;
+  }
   try {
     const res = await fetch(urlPublica(ruta), {
       headers: { Accept: 'application/json' },
       next: { revalidate: REVALIDAR_SEGUNDOS, tags: ['cms', tag] },
-      signal: AbortSignal.timeout(TIMEOUT_MS),
+      signal: AbortSignal.timeout(TIMEOUT_LECTURA_MS),
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return await res.json();
   } catch (err) {
-    console.warn(`[cms] ${ruta} no disponible, uso data.ts:`, (err as Error).message);
+    const e = err as Error;
+    const causa =
+      e.name === 'TimeoutError' || e.name === 'AbortError'
+        ? `timeout (${TIMEOUT_LECTURA_MS} ms)`
+        : e.message.startsWith('HTTP ')
+          ? e.message
+          : `error de red (${e.message})`;
+    console.error(
+      `[cms] FALLÓ la lectura de ${ruta}: ${causa}. Sin respuesta previa en caché: se usa lib/data.ts como respaldo (contenido local, no el del CMS).`,
+    );
     return null;
   }
 }
+let avisoSinEnv = false;
 
 /**
  * Normaliza la respuesta pública `{ items: [{ id, slug, data }] }` (o un array
@@ -88,10 +119,18 @@ const numeroOpc = z.preprocess(
   z.coerce.number().optional(),
 );
 /** Campo `image` del CMS: una URL o varias (multiple). */
+const urlDeFoto = (v: unknown): string => {
+  if (typeof v === 'string') return v.trim();
+  if (v && typeof v === 'object') {
+    const f = v as { url?: unknown; src?: unknown; publicUrl?: unknown };
+    for (const c of [f.url, f.src, f.publicUrl]) if (typeof c === 'string' && c.trim()) return c.trim();
+  }
+  return '';
+};
+/** Tolerante: string, objeto {url|src|publicUrl}, array de cualquiera de ellos, null o undefined. */
 const fotos = z
-  .union([z.string(), z.array(z.string())])
-  .optional()
-  .transform((v) => (Array.isArray(v) ? v : v ? [v] : []).map((s) => s.trim()).filter(Boolean));
+  .unknown()
+  .transform((v): string[] => (Array.isArray(v) ? v : [v]).map(urlDeFoto).filter(Boolean));
 /** `textarea` "uno por línea" → lista. */
 const lineas = z
   .union([z.string(), z.array(z.string())])
@@ -106,7 +145,10 @@ const o = <T>(valor: T | undefined | null, respaldo: T): T =>
 
 type Origen = 'cms' | 'local';
 
-async function coleccion<S extends z.ZodTypeAny>(
+// React.cache: evita parsear dos veces la misma colección dentro de un render
+// (getLandingConfig y getExtensiones). La clave son los argumentos (slug y la
+// referencia al schema, constante de módulo), así que cada slug cachea aparte.
+const coleccion = cache(async function coleccion<S extends z.ZodTypeAny>(
   slug: string,
   schema: S,
 ): Promise<z.output<S>[] | null> {
@@ -116,10 +158,13 @@ async function coleccion<S extends z.ZodTypeAny>(
   for (const entry of extraerEntries(json)) {
     const r = schema.safeParse(entry);
     if (r.success) validas.push(r.data);
-    else console.warn(`[cms] entry inválida en ${slug}:`, r.error.issues[0]?.message);
+    else {
+      const issues = r.error.issues.map((i) => `${i.path.join('.') || '(raíz)'}: ${i.message}`).join('; ');
+      console.warn(`[cms] entry inválida en "${slug}" (id ${String(entry.id ?? '?')}): ${issues}`);
+    }
   }
   return validas.length ? validas : null;
-}
+});
 
 /** Colecciones de un solo registro: la primera entry publicada. */
 async function registro<S extends z.ZodTypeAny>(slug: string, schema: S): Promise<z.output<S> | null> {
@@ -178,7 +223,7 @@ const experienciaCms = base.extend({
 });
 
 const portadaCms = z.object({
-  titulo: texto,
+  titulo: textoOpc,
   subtitulo: textoOpc,
   imagenfondo: fotos,
   introtexto: textoOpc,
@@ -192,7 +237,6 @@ const portadaCms = z.object({
 const infoCms = z.object({
   checkin: textoOpc,
   checkout: textoOpc,
-  queincluye: lineas,
   quetraer: lineas,
   normas: lineas,
   reservastexto: textoOpc,
@@ -222,7 +266,11 @@ async function alojamientosConOrigen(): Promise<{ items: Alojamiento[]; origen: 
       .filter((u) => u.alojamiento === a.id)
       .sort(porOrden)
       .map((u) => ({ nombre: u.nombre, foto: u.foto[0] ?? a.fotos[0] ?? '' }))
-      .filter((v) => v.foto);
+      .filter((v) => {
+        if (v.foto) return true;
+        console.warn(`[cms] variante "${v.nombre}" de "${a.nombre}" descartada: no tiene foto propia ni el alojamiento.`);
+        return false;
+      });
     return {
       id: a.id,
       slug: a.slug,
@@ -250,23 +298,47 @@ export async function getAlojamientos(): Promise<Alojamiento[]> {
 
 export async function getPreguntasFrecuentes(): Promise<PreguntaFrecuente[]> {
   const cms = await coleccion('preguntas-frecuentes', faqCms);
-  return (cms ?? local.preguntasFrecuentes).sort(porOrden);
+  return [...(cms ?? local.preguntasFrecuentes)].sort(porOrden);
+}
+
+/** Para emparejar entries del CMS con las locales: sin tildes, minúsculas, solo alfanumérico. */
+const normalizar = (s: string) =>
+  s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+
+/**
+ * Foto local de respaldo para una entry del CMS sin imágenes: se busca la entry
+ * local equivalente por slug o nombre normalizado (nunca por índice). Si el CMS
+ * trae imágenes, tienen prioridad y esto no se usa.
+ *
+ * Intencional: si el CMS tiene, por ejemplo, una entry "Skatepark" sin
+ * imágenes, se usa la foto local de la recomendación local "Skatepark"
+ * (`/fotos/skatepark.webp`, ver lib/data.ts) en vez de mostrarla sin foto.
+ */
+function fotosLocalesDe(r: { slug: string; nombre: string }): string[] {
+  const slug = normalizar(r.slug);
+  const nombre = normalizar(r.nombre);
+  const l = local.recomendaciones.find((x) => normalizar(x.slug) === slug || normalizar(x.nombre) === nombre);
+  if (!l) return [];
+  return l.imagenes?.length ? l.imagenes : l.imagen ? [l.imagen] : [];
 }
 
 export async function getRecomendaciones(): Promise<Recomendacion[]> {
   const cms = await coleccion('recomendaciones-la-paloma', recomendacionCms);
   if (!cms) return [...local.recomendaciones].sort(porOrden);
   return cms
-    .map((r): Recomendacion => ({
-      id: r.id,
-      slug: r.slug,
-      nombre: r.nombre,
-      tipo: r.tipo,
-      descripcion: r.descripcion,
-      imagen: r.imagenes[0] ?? '',
-      imagenes: r.imagenes.length > 1 ? r.imagenes : undefined,
-      orden: r.orden,
-    }))
+    .map((r): Recomendacion => {
+      const imgs = r.imagenes.length ? r.imagenes : fotosLocalesDe(r);
+      return {
+        id: r.id,
+        slug: r.slug,
+        nombre: r.nombre,
+        tipo: r.tipo,
+        descripcion: r.descripcion,
+        imagen: imgs[0] ?? '',
+        imagenes: imgs.length > 1 ? imgs : undefined,
+        orden: r.orden,
+      };
+    })
     .sort(porOrden);
 }
 
@@ -283,7 +355,7 @@ export async function getLandingConfig(): Promise<LandingConfig> {
     heroConfig: portada
       ? {
           ...L.heroConfig,
-          titulo: portada.titulo,
+          titulo: o(portada.titulo, L.heroConfig.titulo),
           subtitulo: o(portada.subtitulo, L.heroConfig.subtitulo),
           imagenFondo: o(portada.imagenfondo[0], L.heroConfig.imagenFondo),
         }
@@ -301,7 +373,6 @@ export async function getLandingConfig(): Promise<LandingConfig> {
           ogImage: o(portada.ogimage[0], L.seoGlobal.ogImage),
         }
       : L.seoGlobal,
-    queIncluye: info?.queincluye.length ? { items: info.queincluye } : L.queIncluye,
     reservasInfo: info
       ? {
           textoExplicativo: o(info.reservastexto, L.reservasInfo.textoExplicativo),
@@ -333,7 +404,7 @@ export async function getLandingConfig(): Promise<LandingConfig> {
       : L.contacto,
     instalaciones: instalaciones
       ? {
-          items: instalaciones
+          items: [...instalaciones]
             .sort(porOrden)
             .map((i) => ({ titulo: i.titulo, descripcion: i.descripcion, icono: i.icono })),
         }
@@ -358,7 +429,7 @@ export async function getExtensiones(): Promise<Extensiones> {
   return {
     ...X,
     experiencias: experiencias
-      ? experiencias.sort(porOrden).map(
+      ? [...experiencias].sort(porOrden).map(
           (e): Experiencia => ({
             id: e.slug,
             titulo: e.titulo,
@@ -393,12 +464,13 @@ export async function getContenidoLanding() {
 const urlReservas = (sufijo = '') => `${BASE}/integration/collections/reservas/entries${sufijo}`;
 
 async function integracion(url: string, init: RequestInit = {}, timeoutMs = TIMEOUT_MS) {
+  if (!API_KEY) throw new CmsNoConectadoError();
   const res = await fetch(url, {
     ...init,
     cache: 'no-store',
     headers: {
       Accept: 'application/json',
-      'X-Api-Key': API_KEY ?? '',
+      'X-Api-Key': API_KEY,
       ...(init.body ? { 'Content-Type': 'application/json' } : {}),
     },
     signal: AbortSignal.timeout(timeoutMs),
@@ -421,7 +493,8 @@ export async function getEstadiasConfirmadas(desde: string, hasta: string): Prom
   if (!reservasConectadas) return null;
   const confirmadas: EstadiaConfirmada[] = [];
   const PAGINA = 500;
-  for (let pagina = 1; pagina <= 10; pagina++) {
+  const MAX_PAGINAS = 10;
+  for (let pagina = 1; pagina <= MAX_PAGINAS; pagina++) {
     const json = (await integracion(urlReservas(`?page=${pagina}&pageSize=${PAGINA}`))) as {
       items?: { data?: Record<string, unknown> }[];
       pagination?: { pageCount?: number };
@@ -435,7 +508,13 @@ export async function getEstadiasConfirmadas(desde: string, hasta: string): Prom
       if (!alojamientoId || !llegada || !salida) continue;
       if (llegada < hasta && salida > desde) confirmadas.push({ alojamientoId, llegada, salida });
     }
-    if (pagina >= (json.pagination?.pageCount ?? 1)) break;
+    const total = json.pagination?.pageCount ?? 1;
+    if (pagina >= total) break;
+    if (pagina === MAX_PAGINAS) {
+      console.warn(
+        `[cms] getEstadiasConfirmadas: se alcanzó el tope de ${MAX_PAGINAS} páginas (${total} en total); la disponibilidad puede estar incompleta.`,
+      );
+    }
   }
   return confirmadas;
 }

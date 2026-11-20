@@ -18,6 +18,9 @@ const figtree = Figtree({
   variable: '--font-figtree',
 });
 
+if (!process.env.NEXT_PUBLIC_SITE_URL && process.env.NODE_ENV === 'production') {
+  console.warn('[layout] NEXT_PUBLIC_SITE_URL no está definida: canonical/Open Graph usan http://localhost:3000.');
+}
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -51,7 +54,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
-  themeColor: '#263B2D',
+  themeColor: '#2F6675',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

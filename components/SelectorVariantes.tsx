@@ -24,7 +24,12 @@ export function SelectorVariantes({ variantes, idGrupo }: { variantes: Variante[
   return (
     <div>
       <div data-galeria className="relative overflow-hidden rounded-foto bg-arena" style={{ aspectRatio: '4 / 5' }}>
-        <div data-foto={elegida.foto} data-foto-alt={elegida.alt} className="size-full cursor-zoom-in">
+        <div data-foto={elegida.foto} data-foto-alt={elegida.alt}
+          tabIndex={0}
+          role="button"
+          aria-label={elegida.alt ? `Ampliar foto: ${elegida.alt}` : 'Ampliar foto'}
+          className="size-full cursor-zoom-in focus-visible:outline-cal focus-visible:-outline-offset-4"
+        >
           <Image
             key={elegida.foto}
             src={elegida.foto}

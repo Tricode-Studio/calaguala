@@ -80,9 +80,6 @@ export interface ItemInstalacion {
 export interface Instalaciones {
   items: ItemInstalacion[];
 }
-export interface QueIncluye {
-  items: string[];
-}
 export interface ReservasInfo {
   textoExplicativo: string;
   avisoSolicitud: string;
@@ -109,7 +106,6 @@ export interface LandingConfig {
   introduccion: Introduccion;
   ubicacion: Ubicacion;
   instalaciones: Instalaciones;
-  queIncluye: QueIncluye;
   reservasInfo: ReservasInfo;
   informacionPractica: InformacionPractica;
   contacto: Contacto;
@@ -121,11 +117,9 @@ export type SeccionId =
   | 'introduccion'
   | 'ubicacion'
   | 'alojamiento'
-  | 'predio'
   | 'instalaciones'
   | 'experiencias'
   | 'recomendaciones'
-  | 'que-incluye'
   | 'reservas'
   | 'informacion-practica'
   | 'faq'

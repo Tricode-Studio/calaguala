@@ -8,10 +8,11 @@ export function Introduccion({ intro, ext }: { intro: TIntro; ext: Extensiones }
   const { titulo } = ext.secciones.introduccion;
   return (
     <section id="introduccion" aria-labelledby="h-introduccion" className="seccion sobre-oscuro relative isolate overflow-hidden text-cal">
-      {/* Foto de fondo decorativa. El velo mantiene el texto oscuro legible:
+      {/* El fondo lo controla el campo `introimagen` de la colección `portada` del
+          CMS (respaldo local en lib/data.ts). Foto de fondo decorativa. El velo oscuro mantiene legible el texto claro:
           la foto tiene cielo claro y mar oscuro, sin él no se leería. */}
       <Image
-        src="/fotos/fondodescansarcercadelmar.webp"
+        src={intro.imagenApoyo}
         alt=""
         aria-hidden="true"
         fill
@@ -23,10 +24,6 @@ export function Introduccion({ intro, ext }: { intro: TIntro; ext: Extensiones }
         <div>
           <h2 id="h-introduccion" className="text-cal">{titulo}</h2>
           <RichText html={intro.texto} className="mt-6 text-lead leading-relaxed" />
-          <a href="#predio" className="boton boton-secundario mt-8 text-cal">
-            Conocé el espacio
-          </a>
-
         </div>
         <TiraFotos
           aspecto="3 / 4"

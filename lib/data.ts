@@ -27,7 +27,8 @@ export const landingConfig: LandingConfig = {
     // Copy provisto por el cliente. [completar: el brief lo trae cortado con "..."]
     texto:
       '<p>En Calaguala creamos un espacio para descansar, conectar con el mar y la vida natural de La Paloma.</p>',
-    imagenApoyo: F('descansarcercadelmar'),
+    // Fondo de "Descansar cerca del mar" (el CMS lo pisa con `introimagen`).
+    imagenApoyo: F('fondodescansarcercadelmar'),
   },
   ubicacion: {
     direccion: 'La Paloma, Rocha, Uruguay',
@@ -48,7 +49,7 @@ export const landingConfig: LandingConfig = {
       {
         titulo: 'Baños y duchas',
         descripcion:
-          'Ducha exterior e interior, con agua caliente. Para sacarte la sal del mar sin apuro.',
+          'Ducha exterior e interior, con agua caliente.',
         icono: 'ducha',
       },
       {
@@ -59,33 +60,25 @@ export const landingConfig: LandingConfig = {
       },
     ],
   },
-  queIncluye: {
-    items: [
-      'Alojamiento en carpa',
-      'Acceso a espacios comunes',
-      'Cocina compartida',
-      'Baños',
-      'Duchas con agua caliente',
-    ],
-  },
   reservasInfo: {
     textoExplicativo:
       '<p>Contanos cuándo querés venir y cómo te gustaría quedarte. Revisamos cada solicitud y te respondemos para confirmar fechas y detalles.</p>',
     avisoSolicitud: 'Esto es una solicitud, no una reserva confirmada.',
   },
   informacionPractica: {
-    checkIn: '[completar: horario de check-in]',
-    checkOut: '[completar: horario de check-out]',
+    checkIn: '14.00',
+    checkOut: '11.00',
     queTraer: [
-      'Toalla [completar: confirmar si se provee]',
+      'Sábanas',
       'Protector solar',
+      'Repelente',
       'Abrigo para las noches',
+      'Buena onda',
     ],
     normas: [
-      'Horarios de descanso: [completar]',
-      'Uso de espacios comunes: [completar]',
-      'Mascotas: [completar]',
-      'Fumar: [completar]',
+      'Horarios de descanso: 00.00 - 10.00',
+      'Uso de cocina: Hasta las 00.00',
+      'Mascotas: Consultanos disponibilidad',
     ],
   },
   contacto: {
@@ -265,7 +258,7 @@ export const recomendaciones: Recomendacion[] = [
     tipo: 'playa',
     descripcion:
       'Una pequeña playa protegida y de aguas generalmente más calmas, ubicada cerca del centro. Por su tamaño y reparo resulta especialmente agradable para familias con niños y para quienes prefieren un baño más tranquilo.',
-    imagen: '',
+    imagen: F('bahia-chica'),
     orden: 7,
   },
   {
@@ -275,7 +268,7 @@ export const recomendaciones: Recomendacion[] = [
     tipo: 'playa',
     descripcion:
       'Junto al puerto de La Paloma, esta bahía tiene aguas más protegidas y un paisaje diferente al de las playas oceánicas. Desde aquí se puede contemplar el puerto, las embarcaciones y parte del movimiento costero de la ciudad. Es también un buen punto para disfrutar de la costa cuando el océano está más movido.',
-    imagen: '',
+    imagen: F('bahia-grande'),
     orden: 8,
   },
   {
@@ -299,6 +292,8 @@ export const recomendaciones: Recomendacion[] = [
     orden: 10,
   },
   {
+    // Intencional: si el CMS tiene una entry "Skatepark" sin imágenes, se usa
+    // esta foto local como respaldo (ver `fotosLocalesDe` en lib/cms.ts).
     id: 'rec-skatepark',
     slug: 'skatepark',
     nombre: 'Skatepark',
@@ -315,7 +310,7 @@ export const recomendaciones: Recomendacion[] = [
     tipo: 'actividad',
     descripcion:
       '[completar: recomendación del equipo]',
-    imagen: '',
+    imagen: F('puerto'),
     orden: 12,
   },
 ];
@@ -326,22 +321,14 @@ export const recomendaciones: Recomendacion[] = [
 export const extensiones: Extensiones = {
   secciones: {
     introduccion: { titulo: 'Descansar cerca del mar' },
-    ubicacion: { titulo: 'En La Paloma, Playa Anaconda' },
+    ubicacion: { titulo: 'Playa Anaconda' },
     alojamiento: {
       titulo: 'Opciones de alojamiento',
       bajada: 'Dos formas de vivir el mismo lugar: con tu propia carpa o con una que ya te espera armada.',
     },
-    predio: {
-      titulo: 'Recorré el predio',
-      bajada: 'Mostrá u ocultá cada capa para ver cómo está distribuido el espacio.',
-    },
     instalaciones: { titulo: 'Espacios' },
     experiencias: { titulo: 'Experiencias' },
-    recomendaciones: {
-      titulo: 'Descubrí La Paloma',
-      bajada: 'Lugares de la zona que nos gustan y que vale la pena conocer.',
-    },
-    'que-incluye': { titulo: 'Qué incluye tu estadía' },
+    recomendaciones: { titulo: 'Descubrí La Paloma' },
     reservas: { titulo: 'Reservas' },
     'informacion-practica': { titulo: 'Información práctica' },
     faq: { titulo: 'Preguntas frecuentes' },
@@ -411,6 +398,9 @@ export const extensiones: Extensiones = {
     [F('playabalconada')]: 'Playa La Balconada con la costa curvándose y el faro de La Paloma al fondo',
     [F('playalosbotes')]: 'Botes varados en la arena de Playa Los Botes al atardecer',
     [F('playalaserena2')]: 'Pasarela de madera entre las dunas bajando a Playa La Serena',
+    [F('bahia-chica')]: 'Bahía Chica de La Paloma con olas suaves, casas frente a la costa y cielo nublado',
+    [F('bahia-grande')]: 'Bahía Grande de La Paloma con la playa en curva, el pueblo y el faro al fondo al atardecer',
+    [F('puerto')]: 'Barcos de pesca amarrados en el puerto de La Paloma al atardecer, con rocas en primer plano',
     [F('skatepark')]: 'Skatepark de La Paloma pintado con grafitis, con las grúas del puerto detrás',
     [F('farocabosantamaria')]: 'Faro del Cabo Santa María, blanco y negro, recortado contra el cielo despejado',
   },
@@ -447,8 +437,8 @@ export const laPaloma: LaPaloma = {
       { nombre: 'Anaconda', texto: 'Agreste y de horizonte abierto. La que tenemos a pocos pasos.', foto: F('playaanaconda3'), distancia: 'A pasos de Calaguala' },
       { nombre: 'La Serena', texto: 'Extensa y silenciosa, rodeada de dunas y vegetación costera.', foto: F('playalaserena2') },
       { nombre: 'La Aguada', texto: 'Costa extensa y con oleaje, en un entorno residencial tranquilo. Buena para el amanecer.', foto: '' },
-      { nombre: 'Bahía Chica', texto: 'Protegida y de aguas calmas, cerca del centro.', foto: '' },
-      { nombre: 'Bahía Grande', texto: 'Junto al puerto, con aguas resguardadas y vista a las embarcaciones.', foto: '' },
+      { nombre: 'Bahía Chica', texto: 'Protegida y de aguas calmas, cerca del centro.', foto: F('bahia-chica') },
+      { nombre: 'Bahía Grande', texto: 'Junto al puerto, con aguas resguardadas y vista a las embarcaciones.', foto: F('bahia-grande') },
     ],
   },
   naturaleza: {
@@ -479,8 +469,8 @@ export const laPaloma: LaPaloma = {
     cta: 'Explorar',
   },
   puerto: [
-    { titulo: 'Puerto de La Paloma', texto: 'Embarcaciones, pescadores y la identidad marítima del pueblo.', foto: '' },
-    { titulo: 'Bahía Chica / Bahía Grande', texto: 'Aguas más protegidas y rincones tranquilos cerca del centro.', foto: F('skatepark') },
+    { titulo: 'Puerto de La Paloma', texto: 'Embarcaciones, pescadores y la identidad marítima del pueblo.', foto: F('puerto') },
+    { titulo: 'Bahía Chica / Bahía Grande', texto: 'Aguas más protegidas y rincones tranquilos cerca del centro.', foto: F('bahia-chica') },
   ],
   dia: [
     { momento: 'Mañana', texto: 'Caminar por la costa o desayunar cerca del mar.' },
