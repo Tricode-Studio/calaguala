@@ -42,10 +42,10 @@ node scripts/perfil-cms.mjs --aplicar
 **3) Restaurar un respaldo:** reemplaza el perfil por el guardado.
 
 ```
-node scripts/perfil-cms.mjs --restaurar "D:\Lautaro\Tricode\calagualacamp\_respaldo-perfil-cms\perfil-calaguala-AAAAMMDD-HHMMSS.json"
+node scripts/perfil-cms.mjs --restaurar "../_respaldo-perfil-cms/perfil-calaguala-AAAAMMDD-HHMMSS.json"
 ```
 
-Opciones: `--slug <espacio>` (por defecto `calaguala`), `--forzar-email`, `--si`, `--desde-archivo <perfil.json>` (dry-run sin conexión, para probar). Los respaldos se guardan en `D:\Lautaro\Tricode\calagualacamp\_respaldo-perfil-cms\` (se puede cambiar con la variable `TRICODE_BACKUP_DIR`).
+Opciones: `--slug <espacio>` (por defecto `calaguala`), `--forzar-email`, `--si`, `--desde-archivo <perfil.json>` (dry-run sin conexión, para probar). Los respaldos se guardan en `_respaldo-perfil-cms/`, una carpeta hermana del repositorio (`../_respaldo-perfil-cms` respecto de la raíz del repo); se puede cambiar con la variable `TRICODE_BACKUP_DIR`.
 
 Si algo falla al aplicar, el script muestra el estado y el cuerpo del error, la ruta del respaldo y el comando exacto para restaurarlo.
 

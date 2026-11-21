@@ -34,8 +34,13 @@ function validarFechas(
 export const seleccionSchema = seleccionBase.superRefine(validarFechas);
 
 export const datosHuespedSchema = z.object({
-  nombre: z.string().trim().min(2, 'Escribí tu nombre.').max(120, 'El nombre es demasiado largo.'),
-  email: z.string().trim().email('Revisá el email: parece incompleto.'),
+  nombre: z
+    .string()
+    .trim()
+    .min(2, 'Escribí tu nombre.')
+    .max(120, 'El nombre es demasiado largo.')
+    .refine((v) => !/[\u0000-\u001F\u007F]/.test(v), { message: 'El nombre no puede tener saltos de línea ni caracteres raros.' }),
+  email: z.string().trim().email('Revisá el email: parece incompleto.').max(254, 'El email es demasiado largo.'),
   whatsapp: z
     .string()
     .trim()

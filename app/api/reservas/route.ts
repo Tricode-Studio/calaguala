@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { CmsNoConectadoError, crearSolicitudCms, getAlojamientos } from '@/lib/cms';
+import { createHash } from 'node:crypto';
+import { CmsNoConectadoError, crearSolicitudCms, getAlojamientosParaReserva } from '@/lib/cms';
 import { erroresPorCampo, solicitudReservaSchema } from '@/lib/schemas';
 import type { SolicitudReserva } from '@/lib/types';
 
@@ -13,7 +14,10 @@ const MAX_IPS = 5000;
  * cada instancia tiene su propio mapa y se reinicia en frío, así que no es un
  * tope duro; frena ráfagas simples. Para algo estricto hace falta un store
  * compartido. La IP sale de `x-real-ip`, fiable en Vercel o detrás de un proxy
- * que pise ese header; fuera de eso, un cliente directo puede falsearlo. El mapa tiene tope (MAX_IPS): al superarlo se purgan las IP con
+ * que pise ese header; fuera de eso, un cliente directo puede falsearlo. Si no
+ * llega ni `x-real-ip` ni `x-forwarded-for`, la clave es `desconocida:` más un
+ * hash corto (sha-256, 16 hex) de user-agent + accept-language, para que esos
+ * clientes no compartan un único cupo. El mapa tiene tope (MAX_IPS): al superarlo se purgan las IP con
  * todos sus intentos vencidos y, si sigue lleno, las más antiguas.
  */
 const intentos = new Map<string, number[]>();
@@ -47,11 +51,10 @@ function registrarIntento(ip: string) {
  * primer valor puede venir inventado por el cliente fuera de Vercel.
  */
 function ipDe(req: NextRequest): string {
-  return (
-    req.headers.get('x-real-ip')?.trim() ||
-    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-    'desconocida'
-  );
+  const ip = req.headers.get('x-real-ip')?.trim() || req.headers.get('x-forwarded-for')?.split(',')[0]?.trim();
+  if (ip) return ip;
+  const huella = `${req.headers.get('user-agent') ?? ''}|${req.headers.get('accept-language') ?? ''}`;
+  return 'desconocida:' + createHash('sha256').update(huella).digest('hex').slice(0, 16);
 }
 
 /** Lee el body acumulando bytes y corta apenas supera el máximo. `null` = demasiado grande. */
@@ -128,7 +131,12 @@ export async function POST(req: NextRequest) {
   // Ojo: entre la consulta de cupo (`excedeLimite`) y `registrarIntento` hay este
   // `await`, así que pedidos paralelos de la misma IP pueden pasar el chequeo a la
   // vez. Es parte del carácter best effort del límite.
-  const alojamiento = (await getAlojamientos()).find((a) => a.id === parsed.data.tipoAlojamientoId);
+  const { items: alojamientos, origen } = await getAlojamientosParaReserva();
+  // Sin lectura del CMS los alojamientos son los locales: sus ids no existen en el CMS.
+  if (origen !== 'cms') {
+    return NextResponse.json({ codigo: 'CMS_NO_CONECTADO' }, { status: 503 });
+  }
+  const alojamiento = alojamientos.find((a) => a.id === parsed.data.tipoAlojamientoId);
   if (!alojamiento) {
     return NextResponse.json(
       { codigo: 'VALIDACION', errores: { tipoAlojamientoId: 'Ese tipo de alojamiento ya no está disponible.' } },
@@ -145,8 +153,8 @@ export async function POST(req: NextRequest) {
   };
 
   try {
-    const res = await crearSolicitudCms(solicitud);
-    return NextResponse.json({ ok: true, id: res.id ?? null });
+    await crearSolicitudCms(solicitud);
+    return NextResponse.json({ ok: true });
   } catch (err) {
     if (err instanceof CmsNoConectadoError) {
       return NextResponse.json({ codigo: 'CMS_NO_CONECTADO' }, { status: 503 });

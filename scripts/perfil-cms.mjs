@@ -25,7 +25,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const AQUI = dirname(fileURLToPath(import.meta.url));
 const DOC_CAMPOS = resolve(AQUI, '..', 'docs', 'campos-cms.md');
-const DIR_RESPALDO_DEFECTO = 'D:\\Lautaro\\Tricode\\calagualacamp\\_respaldo-perfil-cms';
+const DIR_RESPALDO_DEFECTO = resolve(AQUI, '..', '..', '_respaldo-perfil-cms');
 
 const SLUG_DEFECTO = 'calaguala';
 const API_DEFECTO = 'https://cms.tricode.studio/api/v1';
@@ -218,7 +218,11 @@ function leerArgs(argv) {
     }
     const [k, ...resto] = a.slice(2).split('=');
     if (resto.length) out[k] = resto.join('=');
-    else if (['slug', 'restaurar', 'desde-archivo'].includes(k)) out[k] = argv[++i];
+    else if (['slug', 'restaurar', 'desde-archivo'].includes(k)) {
+      const valor = argv[++i];
+      if (valor === undefined || valor.startsWith('--')) throw new ErrorApi(`Falta el valor de --${k}.`);
+      out[k] = valor;
+    }
     else out[k] = true;
   }
   return out;
@@ -244,7 +248,7 @@ async function api(base, token, ruta, { metodo = 'GET', json } = {}) {
   const cuerpo = await res.json().catch(() => null);
   if (res.status === 401) throw new ErrorApi('401: el token es inválido o venció. Pedí uno nuevo a quien administra el CMS.');
   if (res.status === 403) throw new ErrorApi('403: tu usuario no tiene permiso (hace falta TENANTS_WRITE para aplicar, SETTINGS_READ para leer).');
-  if (!res.ok) throw new ErrorApi(`${metodo} ${ruta} → ${res.status}: ${JSON.stringify(cuerpo)}`);
+  if (!res.ok) throw new ErrorApi(`${metodo} ${ruta} → ${res.status}: ${(JSON.stringify(cuerpo) ?? '').slice(0, 300)}`);
   return cuerpo;
 }
 
@@ -286,8 +290,20 @@ async function principal() {
     if (!perfil || !Array.isArray(perfil.customPages)) throw new ErrorApi('El archivo no parece un perfil (falta customPages).');
     console.log(`Se va a REEMPLAZAR el perfil de "${slug}" en ${base} por el de ${args.restaurar}.`);
     if (!(await confirmar('', args.si))) return console.log('Cancelado. No se escribió nada.');
+    const previo = perfilDe(await api(base, token, ruta));
+    mkdirSync(dirRespaldo, { recursive: true });
+    const archivoPrevio = join(dirRespaldo, `perfil-${slug}-${sello()}-previo-restauracion.json`);
+    writeFileSync(archivoPrevio, JSON.stringify(previo, null, 2), 'utf8');
+    console.log(`Perfil actual guardado en: ${archivoPrevio}`);
     await api(base, token, ruta, { metodo: 'PUT', json: { profile: perfil } });
-    console.log('Perfil restaurado.');
+    const tras = perfilDe(await api(base, token, ruta));
+    if (JSON.stringify(tras) !== JSON.stringify(perfil)) {
+      console.error('\nOJO: el CMS guardó el perfil pero lo que devuelve no coincide con el restaurado.');
+      console.error(`Perfil previo a la restauración: ${archivoPrevio}`);
+      process.exitCode = 1;
+      return;
+    }
+    console.log('Perfil restaurado y verificado.');
     return;
   }
 
@@ -317,12 +333,21 @@ async function principal() {
   if (!args.aplicar) return;
   if (!res.cambios.length) return console.log('\nNada que aplicar.');
 
+  if (!(await confirmar('\nSe va a modificar el perfil en el CMS.', args.si))) return console.log('Cancelado. No se escribió nada ni se guardó respaldo.');
+
   // Respaldo previo del perfil completo.
   mkdirSync(dirRespaldo, { recursive: true });
   const archivo = join(dirRespaldo, `perfil-${slug}-${sello()}.json`);
   writeFileSync(archivo, JSON.stringify(actual, null, 2), 'utf8');
   console.log(`\nRespaldo guardado en: ${archivo}`);
-  if (!(await confirmar('Se va a modificar el perfil en el CMS.', args.si))) return console.log('Cancelado. No se escribió nada (el respaldo quedó guardado).');
+
+  // Si el perfil cambió desde la lectura inicial, no pisamos el cambio ajeno.
+  const releido = perfilDe(await api(base, token, ruta));
+  if (JSON.stringify(releido) !== JSON.stringify(actual)) {
+    console.error('\nEl perfil cambió en el CMS desde que lo leí. No se escribió nada. Volvé a correr el script.');
+    process.exitCode = 1;
+    return;
+  }
 
   try {
     await api(base, token, ruta, { metodo: 'PUT', json: { profile: res.perfil } });

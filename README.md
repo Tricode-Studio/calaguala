@@ -32,6 +32,11 @@ componentes ← app/page.tsx ← lib/cms.ts ──fetch──► Tricode CMS
 
 ## Revalidación a demanda (webhook del CMS)
 
+> **Estado actual:** el endpoint `app/api/revalidate` existe pero no se usa,
+> porque los webhooks del CMS no están activos. El contenido del CMS se
+> actualiza por revalidación temporal (300 s) y puede tardar hasta 5 minutos en
+> verse.
+
 El contenido del CMS se cachea 300 s. Para verlo al instante después de editar,
 `POST /api/revalidate` invalida la etiqueta `cms` y las rutas `/`, `/la-paloma`
 y `/reservar`. Acepta dos autenticaciones: la firma `X-Tricode-Signature` que
