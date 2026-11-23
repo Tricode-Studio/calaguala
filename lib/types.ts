@@ -198,12 +198,14 @@ export interface BloqueLaPaloma {
   foto: string;
 }
 export interface LaPaloma {
+  /** Título y descripción de la pestaña del navegador / Google. */
+  seo: { titulo: string; descripcion: string };
   hero: { titulo: string; bajada: string; entrada: string; foto: string };
-  playas: { intro: string; items: { nombre: string; texto: string; foto: string; distancia?: string }[] };
-  naturaleza: { destacado: BloqueLaPaloma; secundarios: BloqueLaPaloma[] };
+  playas: { titulo: string; intro: string; items: { nombre: string; texto: string; foto: string; distancia?: string }[] };
+  naturaleza: { titulo: string; destacado: BloqueLaPaloma; secundarios: BloqueLaPaloma[] };
   experiencias: { icono: string; titulo: string; texto: string }[];
   faro: BloqueLaPaloma & { cta: string };
   puerto: BloqueLaPaloma[];
-  dia: { momento: string; texto: string }[];
+  dia: { titulo: string; momentos: { momento: string; texto: string }[] };
   cierre: { titulo: string; texto: string; foto: string; cta: string };
 }

@@ -16,6 +16,7 @@ import type {
   Alojamiento,
   Experiencia,
   Extensiones,
+  LaPaloma,
   LandingConfig,
   PreguntaFrecuente,
   Recomendacion,
@@ -629,4 +630,145 @@ export class CmsNoConectadoError extends Error {
   constructor() {
     super('No hay conexión de reservas con Tricode CMS configurada.');
   }
+}
+
+// ── Página "Descubrí La Paloma" (/la-paloma) ───────────────────────────────
+// Una entrada de `la-paloma-pagina` (textos y fotos sueltos) + tres listas:
+// `la-paloma-playas`, `la-paloma-naturaleza` y `la-paloma-experiencias`.
+// Todo opcional: vacío en el CMS = se usa el texto/foto de lib/data.ts.
+const laPalomaPaginaCms = z.object({
+  seotitulo: textoOpc,
+  seodescripcion: textoOpc,
+  herotitulo: textoOpc,
+  herobajada: textoOpc,
+  heroentrada: textoOpc,
+  herofoto: fotos,
+  playastitulo: textoOpc,
+  playasintro: textoOpc,
+  naturalezatitulo: textoOpc,
+  lagunatitulo: textoOpc,
+  lagunatexto: textoOpc,
+  lagunafoto: fotos,
+  farotitulo: textoOpc,
+  farotexto: textoOpc,
+  farofoto: fotos,
+  farocta: textoOpc,
+  puerto1titulo: textoOpc,
+  puerto1texto: textoOpc,
+  puerto1foto: fotos,
+  puerto2titulo: textoOpc,
+  puerto2texto: textoOpc,
+  puerto2foto: fotos,
+  diatitulo: textoOpc,
+  diamanana: textoOpc,
+  diamediodia: textoOpc,
+  diatarde: textoOpc,
+  diaatardecer: textoOpc,
+  cierretitulo: textoOpc,
+  cierretexto: textoOpc,
+  cierrefoto: fotos,
+  cierrecta: textoOpc,
+});
+
+const laPalomaPlayaCms = base.extend({
+  nombre: texto,
+  texto: textoOpc,
+  foto: fotos,
+  distancia: textoOpc,
+  orden: numero.default(0),
+});
+
+const laPalomaNaturalezaCms = base.extend({
+  titulo: texto,
+  texto: textoOpc,
+  foto: fotos,
+  orden: numero.default(0),
+});
+
+const laPalomaExperienciaCms = base.extend({
+  titulo: texto,
+  texto: textoOpc,
+  icono: textoOpc,
+  orden: numero.default(0),
+});
+
+export async function getLaPaloma(): Promise<LaPaloma> {
+  const L = local.laPaloma;
+  const [p, playas, naturaleza, experiencias] = await Promise.all([
+    registro('la-paloma-pagina', laPalomaPaginaCms),
+    coleccion('la-paloma-playas', laPalomaPlayaCms),
+    coleccion('la-paloma-naturaleza', laPalomaNaturalezaCms),
+    coleccion('la-paloma-experiencias', laPalomaExperienciaCms),
+  ]);
+
+  const textosDia = [p?.diamanana, p?.diamediodia, p?.diatarde, p?.diaatardecer];
+  const bloquesPuerto = [
+    [p?.puerto1titulo, p?.puerto1texto, p?.puerto1foto],
+    [p?.puerto2titulo, p?.puerto2texto, p?.puerto2foto],
+  ] as const;
+  const bloque = (
+    titulo: string | undefined,
+    texto: string | undefined,
+    foto: string[] | undefined,
+    r: { titulo: string; texto: string; foto: string },
+  ) => ({ titulo: o(titulo, r.titulo), texto: o(texto, r.texto), foto: o(foto?.[0], r.foto) });
+
+  return {
+    seo: {
+      titulo: o(p?.seotitulo, L.seo.titulo),
+      descripcion: o(p?.seodescripcion, L.seo.descripcion),
+    },
+    hero: {
+      titulo: o(p?.herotitulo, L.hero.titulo),
+      bajada: o(p?.herobajada, L.hero.bajada),
+      entrada: o(p?.heroentrada, L.hero.entrada),
+      foto: o(p?.herofoto[0], L.hero.foto),
+    },
+    playas: {
+      titulo: o(p?.playastitulo, L.playas.titulo),
+      intro: o(p?.playasintro, L.playas.intro),
+      items: playas
+        ? [...playas].sort(porOrden).map((x) => {
+            const l = L.playas.items.find((i) => normalizar(i.nombre) === normalizar(x.nombre));
+            return {
+              nombre: x.nombre,
+              texto: o(x.texto, l?.texto ?? ''),
+              foto: o(x.foto[0], l?.foto ?? ''),
+              distancia: o(x.distancia, l?.distancia ?? '') || undefined,
+            };
+          })
+        : L.playas.items,
+    },
+    naturaleza: {
+      titulo: o(p?.naturalezatitulo, L.naturaleza.titulo),
+      destacado: bloque(p?.lagunatitulo, p?.lagunatexto, p?.lagunafoto, L.naturaleza.destacado),
+      secundarios: naturaleza
+        ? [...naturaleza].sort(porOrden).map((x) => {
+            const l = L.naturaleza.secundarios.find((i) => normalizar(i.titulo) === normalizar(x.titulo));
+            return { titulo: x.titulo, texto: o(x.texto, l?.texto ?? ''), foto: o(x.foto[0], l?.foto ?? '') };
+          })
+        : L.naturaleza.secundarios,
+    },
+    experiencias: experiencias
+      ? [...experiencias].sort(porOrden).map((x) => {
+          const l = L.experiencias.find((i) => normalizar(i.titulo) === normalizar(x.titulo));
+          return { icono: o(x.icono, l?.icono ?? ''), titulo: x.titulo, texto: o(x.texto, l?.texto ?? '') };
+        })
+      : L.experiencias,
+    faro: {
+      ...bloque(p?.farotitulo, p?.farotexto, p?.farofoto, L.faro),
+      cta: o(p?.farocta, L.faro.cta),
+    },
+    puerto: L.puerto.map((r, i) => bloque(bloquesPuerto[i]?.[0], bloquesPuerto[i]?.[1], bloquesPuerto[i]?.[2], r)),
+    dia: {
+      titulo: o(p?.diatitulo, L.dia.titulo),
+      momentos: L.dia.momentos.map((m, i) => ({ momento: m.momento, texto: o(textosDia[i], m.texto) })),
+    },
+    cierre: {
+      titulo: o(p?.cierretitulo, L.cierre.titulo),
+      texto: o(p?.cierretexto, L.cierre.texto),
+      foto: o(p?.cierrefoto[0], L.cierre.foto),
+      cta: o(p?.cierrecta, L.cierre.cta),
+    },
+  };
 }

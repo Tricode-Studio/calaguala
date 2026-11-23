@@ -436,6 +436,10 @@ export const extensiones: Extensiones = {
 // Textos provistos por el cliente. Las fotos que faltan quedan en '' y el
 // bloque se adapta: nunca se renderiza un marco vacío.
 export const laPaloma: LaPaloma = {
+  seo: {
+    titulo: 'Descubrí La Paloma',
+    descripcion: 'Playas, lagunas, bosques y senderos de La Paloma, Rocha. Una guía visual del lugar, desde Calaguala.',
+  },
   hero: {
     titulo: 'Descubrí La Paloma',
     bajada: 'Mar, naturaleza y pequeños lugares para descubrir.',
@@ -444,6 +448,7 @@ export const laPaloma: LaPaloma = {
     foto: F('fondodescansarcercadelmar'),
   },
   playas: {
+    titulo: 'Cada playa, un paisaje diferente',
     intro:
       'La costa cambia de carácter cada pocos kilómetros: de las olas abiertas del océano a las bahías protegidas junto al puerto.',
     items: [
@@ -458,6 +463,7 @@ export const laPaloma: LaPaloma = {
     ],
   },
   naturaleza: {
+    titulo: 'Más allá del mar',
     destacado: {
       titulo: 'Laguna de Rocha',
       texto: 'Un paisaje de agua, humedales y vida silvestre donde el océano se encuentra con la laguna.',
@@ -488,12 +494,15 @@ export const laPaloma: LaPaloma = {
     { titulo: 'Puerto de La Paloma', texto: 'Embarcaciones, pescadores y la identidad marítima del pueblo.', foto: F('puerto') },
     { titulo: 'Bahía Chica / Bahía Grande', texto: 'Aguas más protegidas y rincones tranquilos cerca del centro.', foto: F('bahia-chica') },
   ],
-  dia: [
-    { momento: 'Mañana', texto: 'Caminar por la costa o desayunar cerca del mar.' },
-    { momento: 'Mediodía', texto: 'Playa, surf o paseo en bicicleta.' },
-    { momento: 'Tarde', texto: 'Explorar el faro, el puerto o la Laguna de Rocha.' },
-    { momento: 'Atardecer', texto: 'La Balconada y el océano.' },
-  ],
+  dia: {
+    titulo: 'Un día en La Paloma',
+    momentos: [
+      { momento: 'Mañana', texto: 'Caminar por la costa o desayunar cerca del mar.' },
+      { momento: 'Mediodía', texto: 'Playa, surf o paseo en bicicleta.' },
+      { momento: 'Tarde', texto: 'Explorar el faro, el puerto o la Laguna de Rocha.' },
+      { momento: 'Atardecer', texto: 'La Balconada y el océano.' },
+    ],
+  },
   cierre: {
     titulo: 'La Paloma, a tu ritmo',
     texto:

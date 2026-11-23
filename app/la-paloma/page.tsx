@@ -4,23 +4,26 @@ import Link from 'next/link';
 import { SiteHeader } from '@/components/SiteHeader';
 import { Foto } from '@/components/ui/Foto';
 import { IconoPaloma } from '@/components/ui/IconosPaloma';
-import { laPaloma } from '@/lib/data';
+import { getLaPaloma } from '@/lib/cms';
 
-export const metadata: Metadata = {
-  title: 'Descubrí La Paloma',
-  description:
-    'Playas, lagunas, bosques y senderos de La Paloma, Rocha. Una guía visual del lugar, desde Calaguala.',
-  alternates: { canonical: '/la-paloma' },
-};
+export const revalidate = 300;
 
-const { hero, playas, naturaleza, experiencias, faro, puerto, dia, cierre } = laPaloma;
+export async function generateMetadata(): Promise<Metadata> {
+  const { seo } = await getLaPaloma();
+  return {
+    title: seo.titulo,
+    description: seo.descripcion,
+    alternates: { canonical: '/la-paloma' },
+  };
+}
 
 /** Marco vacío para los lugares que todavía no tienen foto. */
 function Hueco({ aspecto, tono = 'bg-cal/60' }: { aspecto: string; tono?: string }) {
   return <div aria-hidden="true" className={`rounded-foto ${tono}`} style={{ aspectRatio: aspecto }} />;
 }
 
-export default function LaPalomaPage() {
+export default async function LaPalomaPage() {
+  const { hero, playas, naturaleza, experiencias, faro, puerto, dia, cierre } = await getLaPaloma();
   return (
     <>
       <SiteHeader />
@@ -46,7 +49,7 @@ export default function LaPalomaPage() {
         {/* 2 · Playas */}
         <section aria-labelledby="h-playas" className="seccion bg-playa">
           <div className="contenedor">
-            <h2 id="h-playas" className="aparece max-w-[18ch] text-oceano">Cada playa, un paisaje diferente</h2>
+            <h2 id="h-playas" className="aparece max-w-[18ch] text-oceano">{playas.titulo}</h2>
             <p className="aparece prosa mt-5 max-w-[48ch] text-tinta">{playas.intro}</p>
 
             <ul className="mt-14 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
@@ -71,7 +74,7 @@ export default function LaPalomaPage() {
         {/* 3 · Naturaleza */}
         <section aria-labelledby="h-naturaleza" className="seccion">
           <div className="contenedor">
-            <h2 id="h-naturaleza" className="aparece text-oceano">Más allá del mar</h2>
+            <h2 id="h-naturaleza" className="aparece text-oceano">{naturaleza.titulo}</h2>
 
             <div className="aparece mt-12 grid gap-8 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] md:items-center">
               {naturaleza.destacado.foto ? (
@@ -156,15 +159,15 @@ export default function LaPalomaPage() {
         {/* 7 · Un día en La Paloma */}
         <section aria-labelledby="h-dia" className="seccion">
           <div className="contenedor">
-            <h2 id="h-dia" className="aparece text-oceano">Un día en La Paloma</h2>
+            <h2 id="h-dia" className="aparece text-oceano">{dia.titulo}</h2>
             <ol className="mt-12 max-w-[42rem]">
-              {dia.map((d, i) => (
+              {dia.momentos.map((d, i) => (
                 <li key={d.momento} className="aparece grid grid-cols-[auto_minmax(0,1fr)] gap-x-6">
                   <span aria-hidden="true" className="flex flex-col items-center">
                     <span className="size-3 rounded-full bg-terracota" />
-                    {i < dia.length - 1 ? <span className="w-px flex-1 bg-oceano/25" /> : null}
+                    {i < dia.momentos.length - 1 ? <span className="w-px flex-1 bg-oceano/25" /> : null}
                   </span>
-                  <div className={i < dia.length - 1 ? 'pb-10' : ''}>
+                  <div className={i < dia.momentos.length - 1 ? 'pb-10' : ''}>
                     <h3 className="text-h3 uppercase tracking-wide text-oceano">{d.momento}</h3>
                     <p className="mt-1 text-lead leading-snug text-tinta-suave">{d.texto}</p>
                   </div>
