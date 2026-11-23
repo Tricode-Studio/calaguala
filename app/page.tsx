@@ -23,7 +23,7 @@ export default async function Home() {
   return (
     <>
       <JsonLd config={config} ext={ext} alojamientos={alojamientos} />
-      <a href="#introduccion" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-cal focus:px-4 focus:py-3">
+      <a href="#introduccion" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-20 focus:z-50 focus:rounded-full focus:bg-cal focus:px-4 focus:py-3">
         Saltar al contenido
       </a>
       <SiteHeader />
@@ -33,10 +33,10 @@ export default async function Home() {
         <Ubicacion ubicacion={config.ubicacion} ext={ext} />
         <Alojamientos alojamientos={alojamientos} ext={ext} />
         <Instalaciones instalaciones={config.instalaciones} ext={ext} />
+        <InformacionPractica info={config.informacionPractica} ext={ext} />
         <Experiencias ext={ext} />
         <Recomendaciones items={recomendaciones} ext={ext} />
         <Reservas info={config.reservasInfo} ext={ext} />
-        <InformacionPractica info={config.informacionPractica} ext={ext} />
         <Faq items={faq} ext={ext} />
       </main>
       <Contacto contacto={config.contacto} ubicacion={config.ubicacion} ext={ext} />

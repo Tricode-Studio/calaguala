@@ -6,7 +6,7 @@ import { SeccionEncabezado } from '../ui/SeccionEncabezado';
 export function Experiencias({ ext }: { ext: Extensiones }) {
   const { titulo, bajada } = ext.secciones.experiencias;
   return (
-    <section id="experiencias" aria-labelledby="h-experiencias" className="seccion bg-nieve">
+    <section id="experiencias" aria-labelledby="h-experiencias" className="seccion">
       <div className="contenedor">
         <SeccionEncabezado id="h-experiencias" titulo={titulo} bajada={bajada} />
         <ul className="grid gap-12 md:grid-cols-2 md:gap-10 lg:grid-cols-4 lg:gap-8">

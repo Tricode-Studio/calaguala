@@ -7,7 +7,7 @@ export function Recomendaciones({ items, ext }: { items: Recomendacion[]; ext: E
   const { titulo, bajada } = ext.secciones.recomendaciones;
   if (!items.length) return null;
   return (
-    <section id="recomendaciones" aria-labelledby="h-recomendaciones" className="seccion">
+    <section id="recomendaciones" aria-labelledby="h-recomendaciones" className="seccion bg-nieve">
       <div className="contenedor">
         <SeccionEncabezado id="h-recomendaciones" titulo={titulo} bajada={bajada} />
         <ul className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
