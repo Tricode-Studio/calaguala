@@ -11,10 +11,12 @@
  * Paloma" para que no se confunda con la página (esa colección alimenta las
  * tarjetas de la portada, no la página /la-paloma).
  *
- * Con --aplicar, además carga en cada colección NUEVA (solo si está vacía) los
- * textos que hoy muestra el sitio, para que se vean y se puedan editar. Las
- * fotos no se cargan: mientras un campo de foto esté vacío, el sitio sigue
- * mostrando la foto actual.
+ * Con --aplicar, además carga en cada colección las entradas que falten (se
+ * comparan por título, sin importar mayúsculas ni acentos) con los textos que
+ * hoy muestra el sitio, para que se vean y se puedan editar. Lo que ya está
+ * cargado no se toca ni se repite; 'la-paloma-pagina' (entrada única) solo se
+ * carga si no tiene ninguna. Las fotos no se cargan: mientras un campo de foto
+ * esté vacío, el sitio sigue mostrando la foto actual.
  *
  * Por defecto es DRY-RUN (no escribe nada). Ver docs/aplicar-perfil-cms.md.
  *
@@ -303,7 +305,13 @@ export function fusionarPerfil(perfil) {
     const existente = nuevo.customPages.find((p) => p?.slug === def.slug || p?.dataSchema?.contentTypeSlug === def.slug);
     if (existente) continue;
     if (nuevo.customPages.length >= MAX_PAGINAS) {
-      errores.push(`El CMS admite máximo ${MAX_PAGINAS} páginas custom y ya hay ${nuevo.customPages.length}.`);
+      const hay = perfil.customPages.length;
+      const faltantes = PAGINAS.filter((d) => !perfil.customPages.some((p) => p?.slug === d.slug || p?.dataSchema?.contentTypeSlug === d.slug)).length;
+      const sobran = hay + faltantes - MAX_PAGINAS;
+      errores.push(
+        `El CMS admite máximo ${MAX_PAGINAS} páginas custom: hay ${hay} y faltan crear ${faltantes} (excede por ${sobran}). ` +
+          `No se escribió nada en el CMS; liberá ${sobran} página(s) custom y volvé a correr el script.`,
+      );
       break;
     }
     orden += 1;
@@ -387,20 +395,49 @@ async function confirmar(pregunta, automatico) {
   return r === 'si' || r === 'sí';
 }
 
+const normalizar = (s) => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+
+const POR_PAGINA = 100;
+const MAX_PAGINAS_LECTURA = 50;
+
+async function listarEntradas(base, token, ruta) {
+  const todas = [];
+  for (let page = 1; page <= MAX_PAGINAS_LECTURA; page++) {
+    const lote = listaDe(await api(base, token, `${ruta}?pageSize=${POR_PAGINA}&page=${page}`));
+    todas.push(...lote);
+    if (lote.length < POR_PAGINA) break;
+  }
+  return todas;
+}
+
 async function cargarSemilla(base, token, slug) {
   const informe = [];
   for (const def of PAGINAS) {
     const filas = SEMILLA[def.slug] ?? [];
     const ruta = `/tenants/${encodeURIComponent(slug)}/content-types/${def.slug}/entries`;
-    const existentes = listaDe(await api(base, token, `${ruta}?limit=1`));
-    if (existentes.length) {
-      informe.push(`  · ${def.slug}: ya tenía contenido, no se carga nada`);
-      continue;
+    let existentes;
+    try {
+      existentes = await listarEntradas(base, token, ruta);
+    } catch (err) {
+      if (err instanceof ErrorApi && err.message.includes('→ 404')) {
+        throw new ErrorApi(
+          `La API no encontró el tipo de contenido «${def.slug}» (404). Revisá que el perfil del espacio tenga esa colección (customPages) y volvé a correr el script. Detalle: ${err.message}`,
+        );
+      }
+      throw err;
     }
-    for (const fila of filas) {
+    let aCrear;
+    if (def.slug === 'la-paloma-pagina') {
+      aCrear = existentes.length ? [] : filas;
+    } else {
+      const tengo = new Set(existentes.map((e) => normalizar(tituloDe(def.slug, e?.data ?? e))));
+      for (const e of existentes) if (typeof e?.title === 'string') tengo.add(normalizar(e.title));
+      aCrear = filas.filter((fila) => !tengo.has(normalizar(tituloDe(def.slug, fila))));
+    }
+    for (const fila of aCrear) {
       await api(base, token, ruta, { metodo: 'POST', json: { title: tituloDe(def.slug, fila), status: 'PUBLISHED', data: fila } });
     }
-    informe.push(`  + ${def.slug}: ${filas.length} entradas cargadas`);
+    informe.push(`  ${aCrear.length ? '+' : '·'} ${def.slug}: ${aCrear.length} creadas, ${filas.length - aCrear.length} ya estaban`);
   }
   return informe;
 }
@@ -434,7 +471,7 @@ async function principal() {
   console.log('\nCambios en el perfil:');
   if (!res.cambios.length) console.log('  (sin cambios: el perfil ya está al día)');
   for (const c of res.cambios) console.log(`  + ${c}`);
-  console.log('\nContenido que se carga (solo en colecciones nuevas y vacías):');
+  console.log('\nContenido a cargar (solo las entradas que falten en cada colección, comparadas por título):');
   for (const def of PAGINAS) console.log(`  · ${def.slug}: ${(SEMILLA[def.slug] ?? []).length} entrada(s)`);
   if (!args.aplicar) return;
 
@@ -442,6 +479,7 @@ async function principal() {
     return console.log('Cancelado. No se escribió nada.');
   }
 
+  let perfilFinal = actual;
   if (res.cambios.length) {
     mkdirSync(dirRespaldo, { recursive: true });
     const archivo = join(dirRespaldo, `perfil-${slug}-${sello()}-la-paloma.json`);
@@ -472,7 +510,19 @@ async function principal() {
       process.exitCode = 1;
       return;
     }
+    perfilFinal = guardado;
     console.log('Perfil guardado y verificado.');
+  }
+
+  const sinPaginas = PAGINAS.filter(
+    (d) => !(perfilFinal.customPages ?? []).some((p) => p?.slug === d.slug || p?.dataSchema?.contentTypeSlug === d.slug),
+  ).map((d) => d.slug);
+  if (sinPaginas.length) {
+    console.error(`
+No se carga contenido: el perfil del CMS no tiene las colecciones ${sinPaginas.join(', ')}.`);
+    console.error('Corré el script de nuevo para que agregue las páginas al perfil, o revisá el perfil del espacio.');
+    process.exitCode = 1;
+    return;
   }
 
   try {
@@ -480,7 +530,7 @@ async function principal() {
     for (const l of await cargarSemilla(base, token, slug)) console.log(l);
   } catch (err) {
     console.error(`\nEl perfil quedó bien pero falló la carga de contenido: ${err.message}`);
-    console.error('Podés volver a correr el script: no repite lo que ya está cargado.');
+    console.error('Podés volver a correr el script: completa solo las entradas que falten.');
     process.exitCode = 1;
     return;
   }

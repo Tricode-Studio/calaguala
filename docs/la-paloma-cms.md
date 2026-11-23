@@ -36,6 +36,25 @@ La página `/la-paloma` se edita desde el CMS. En el menú aparecen cuatro colec
 
 Es la que antes se llamaba «Descubrí La Paloma». **No** edita la página `/la-paloma`: edita las tarjetas de la sección «Descubrí La Paloma» de la **portada** del sitio. El título y la bajada de esa sección se editan en **Portada** (campos «Título de Descubrí La Paloma» y «Bajada…»).
 
-## Cómo se activó
+## Antes de editar: cosas a tener en cuenta
 
-`scripts/perfil-la-paloma.mjs` crea las cuatro colecciones y carga los textos actuales (no las fotos). Funciona igual que `scripts/perfil-cms.mjs`: primero muestra qué haría sin escribir nada, y con `--aplicar` guarda un respaldo, pide confirmación y verifica. Para volver atrás se usa `node scripts/perfil-cms.mjs --restaurar <respaldo>`.
+- **«Página La Paloma · Textos y fotos» es de una sola entrada.** Si se crea otra, el sitio usa la primera y la otra no se ve.
+- **En las listas (Playas, Naturaleza y Franja de experiencias), el respaldo local de foto y texto se empareja por nombre o título.** Si renombrás un ítem, el sitio deja de reconocerlo como el de siempre y hay que volver a subir su foto. Una playa sin foto muestra un marco vacío.
+- **Los ítems sin número de orden quedan al final** de la lista. Si querés que uno vaya antes, cargale un número en **Orden**.
+
+## Cómo se activa
+
+`scripts/perfil-la-paloma.mjs` crea las cuatro colecciones y carga los textos actuales (no las fotos). Funciona igual que `scripts/perfil-cms.mjs`: por defecto es un dry-run que muestra qué haría sin escribir nada, y con `--aplicar` sigue este orden:
+
+1. **Dry-run:** muestra los cambios en el perfil y el contenido que cargaría.
+2. **Confirmación:** pide escribir «si» para continuar.
+3. **Respaldo:** guarda el perfil actual en un archivo. Si el perfil no tiene cambios que hacer (las colecciones ya están creadas), no hay respaldo, porque no se toca el perfil.
+4. **PUT del perfil:** agrega las cuatro colecciones y renombra la vieja.
+5. **Verificación:** vuelve a leer el perfil y comprueba que quedó guardado.
+6. **Carga del contenido:** por cada colección, crea las entradas que faltan (compara por título) y no toca las que ya están.
+
+Si la carga se corta, se puede volver a correr el script: completa solo lo que falta.
+
+## Volver atrás
+
+`node scripts/perfil-cms.mjs --restaurar <respaldo>` restaura **solo el perfil**. No borra las entradas que se hayan cargado ni las colecciones que ya se crearon: eso, si hace falta, se limpia a mano desde el CMS.

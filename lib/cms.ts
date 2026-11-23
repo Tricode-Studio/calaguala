@@ -12,6 +12,7 @@ import 'server-only';
 import { cache } from 'react';
 import { z } from 'zod';
 import * as local from './data';
+import { iconoPalomaValido } from './iconos-paloma';
 import type {
   Alojamiento,
   Experiencia,
@@ -112,7 +113,7 @@ function extraerEntries(json: unknown): Record<string, unknown>[] {
 
 // ── Helpers de forma ───────────────────────────────────────────────────────
 const texto = z.string();
-const textoOpc = z.string().optional();
+const textoOpc = z.string().nullish();
 const numero = z.coerce.number();
 /** Número opcional: vacío en el CMS es "sin valor", no 0 (precio vacío = a consultar). */
 const numeroOpc = z.preprocess(
@@ -173,6 +174,13 @@ async function registro<S extends z.ZodTypeAny>(slug: string, schema: S): Promis
 }
 
 const porOrden = <T extends { orden: number }>(a: T, b: T) => a.orden - b.orden;
+/** Como porOrden, pero los ítems sin orden van al final (estable entre sí). */
+const porOrdenOpc = <T extends { orden?: number }>(a: T, b: T) => {
+  if (a.orden === undefined || b.orden === undefined) {
+    return a.orden === b.orden ? 0 : a.orden === undefined ? 1 : -1;
+  }
+  return a.orden - b.orden;
+};
 
 // ── Schemas del CMS (keys en minúscula) ────────────────────────────────────
 const alojamientoCms = base.extend({
@@ -456,7 +464,7 @@ export async function getExtensiones(): Promise<Extensiones> {
     registro('ubicacion-contacto', contactoCms),
   ]);
   // Títulos y bajadas editables (vacío = texto local). La bajada puede no existir.
-  const bajadaOpc = (v: string | undefined, r: string | undefined) => (v?.trim() ? v : r);
+  const bajadaOpc = (v: string | null | undefined, r: string | undefined) => (v?.trim() ? v : r);
   const S = X.secciones;
   return {
     ...X,
@@ -675,21 +683,21 @@ const laPalomaPlayaCms = base.extend({
   texto: textoOpc,
   foto: fotos,
   distancia: textoOpc,
-  orden: numero.default(0),
+  orden: numeroOpc,
 });
 
 const laPalomaNaturalezaCms = base.extend({
   titulo: texto,
   texto: textoOpc,
   foto: fotos,
-  orden: numero.default(0),
+  orden: numeroOpc,
 });
 
 const laPalomaExperienciaCms = base.extend({
   titulo: texto,
   texto: textoOpc,
   icono: textoOpc,
-  orden: numero.default(0),
+  orden: numeroOpc,
 });
 
 export async function getLaPaloma(): Promise<LaPaloma> {
@@ -707,8 +715,8 @@ export async function getLaPaloma(): Promise<LaPaloma> {
     [p?.puerto2titulo, p?.puerto2texto, p?.puerto2foto],
   ] as const;
   const bloque = (
-    titulo: string | undefined,
-    texto: string | undefined,
+    titulo: string | null | undefined,
+    texto: string | null | undefined,
     foto: string[] | undefined,
     r: { titulo: string; texto: string; foto: string },
   ) => ({ titulo: o(titulo, r.titulo), texto: o(texto, r.texto), foto: o(foto?.[0], r.foto) });
@@ -728,7 +736,7 @@ export async function getLaPaloma(): Promise<LaPaloma> {
       titulo: o(p?.playastitulo, L.playas.titulo),
       intro: o(p?.playasintro, L.playas.intro),
       items: playas
-        ? [...playas].sort(porOrden).map((x) => {
+        ? [...playas].sort(porOrdenOpc).map((x) => {
             const l = L.playas.items.find((i) => normalizar(i.nombre) === normalizar(x.nombre));
             return {
               nombre: x.nombre,
@@ -743,16 +751,16 @@ export async function getLaPaloma(): Promise<LaPaloma> {
       titulo: o(p?.naturalezatitulo, L.naturaleza.titulo),
       destacado: bloque(p?.lagunatitulo, p?.lagunatexto, p?.lagunafoto, L.naturaleza.destacado),
       secundarios: naturaleza
-        ? [...naturaleza].sort(porOrden).map((x) => {
+        ? [...naturaleza].sort(porOrdenOpc).map((x) => {
             const l = L.naturaleza.secundarios.find((i) => normalizar(i.titulo) === normalizar(x.titulo));
             return { titulo: x.titulo, texto: o(x.texto, l?.texto ?? ''), foto: o(x.foto[0], l?.foto ?? '') };
           })
         : L.naturaleza.secundarios,
     },
     experiencias: experiencias
-      ? [...experiencias].sort(porOrden).map((x) => {
+      ? [...experiencias].sort(porOrdenOpc).map((x) => {
           const l = L.experiencias.find((i) => normalizar(i.titulo) === normalizar(x.titulo));
-          return { icono: o(x.icono, l?.icono ?? ''), titulo: x.titulo, texto: o(x.texto, l?.texto ?? '') };
+          return { icono: iconoPalomaValido(x.icono) ?? iconoPalomaValido(l?.icono) ?? 'ave', titulo: x.titulo, texto: o(x.texto, l?.texto ?? '') };
         })
       : L.experiencias,
     faro: {
