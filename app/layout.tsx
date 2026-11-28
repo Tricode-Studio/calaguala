@@ -41,6 +41,7 @@ export async function generateMetadata(): Promise<Metadata> {
       type: 'website',
       locale: 'es_UY',
       siteName: 'Calaguala',
+      url: '/',
       title: seoGlobal.metaTitle,
       description: seoGlobal.metaDescription,
       images: [{ url: seoGlobal.ogImage, width: 1200, height: 630, alt: 'Calaguala, camping y glamping en La Paloma' }],

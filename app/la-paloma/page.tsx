@@ -9,11 +9,21 @@ import { getLaPaloma } from '@/lib/cms';
 export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { seo } = await getLaPaloma();
+  const { seo, hero } = await getLaPaloma();
   return {
     title: seo.titulo,
     description: seo.descripcion,
     alternates: { canonical: '/la-paloma' },
+    // openGraph del layout se reemplaza entero (no se fusiona): repetir lo común.
+    openGraph: {
+      type: 'website',
+      locale: 'es_UY',
+      siteName: 'Calaguala',
+      url: '/la-paloma',
+      title: `${seo.titulo} · Calaguala`,
+      description: seo.descripcion,
+      ...(hero.foto ? { images: [{ url: hero.foto, alt: hero.titulo }] } : {}),
+    },
   };
 }
 

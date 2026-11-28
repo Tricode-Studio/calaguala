@@ -22,7 +22,7 @@ export default async function Home() {
 
   return (
     <>
-      <JsonLd config={config} ext={ext} alojamientos={alojamientos} />
+      <JsonLd config={config} ext={ext} alojamientos={alojamientos} faq={faq} />
       <a href="#introduccion" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-20 focus:z-50 focus:rounded-full focus:bg-cal focus:px-4 focus:py-3">
         Saltar al contenido
       </a>

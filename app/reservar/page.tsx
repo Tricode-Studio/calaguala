@@ -4,12 +4,28 @@ import { WhatsAppFlotante } from '@/components/WhatsAppFlotante';
 import { FlujoReserva } from '@/components/reserva/FlujoReserva';
 import { getAlojamientos, getExtensiones, getLandingConfig } from '@/lib/cms';
 
-export const metadata: Metadata = {
-  title: 'Solicitá tu reserva en La Paloma',
-  description:
-    'Consultá disponibilidad de camping y glamping en La Paloma, a pasos de Playa Anaconda, y enviá tu solicitud de reserva. El equipo la revisa y te confirma.',
-  alternates: { canonical: '/reservar' },
-};
+const TITULO = 'Solicitá tu reserva en La Paloma';
+const DESCRIPCION =
+  'Consultá disponibilidad de camping y glamping en La Paloma, a pasos de Playa Anaconda, y enviá tu solicitud de reserva. El equipo la revisa y te confirma.';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { seoGlobal } = await getLandingConfig();
+  return {
+    title: TITULO,
+    description: DESCRIPCION,
+    alternates: { canonical: '/reservar' },
+    // openGraph del layout se reemplaza entero (no se fusiona): repetir lo común.
+    openGraph: {
+      type: 'website',
+      locale: 'es_UY',
+      siteName: 'Calaguala',
+      url: '/reservar',
+      title: `${TITULO} · Calaguala`,
+      description: DESCRIPCION,
+      images: [{ url: seoGlobal.ogImage, width: 1200, height: 630, alt: 'Calaguala, camping y glamping en La Paloma' }],
+    },
+  };
+}
 
 export default async function ReservarPage({ searchParams }: { searchParams: Promise<{ tipo?: string }> }) {
   const [{ tipo }, config, alojamientos, ext] = await Promise.all([
