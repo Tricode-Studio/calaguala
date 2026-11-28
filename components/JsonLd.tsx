@@ -58,8 +58,19 @@ export function JsonLd({
   const preguntas = faq
     .map((f) => ({ q: f.pregunta.trim(), a: sinHtml(f.respuesta) }))
     .filter((f) => f.q && f.a && !f.a.includes('[completar'));
+  // WebSite: le dice a Google el nombre del sitio («Calaguala» en vez del dominio).
+  const sitio = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${SITE_URL}/#sitio`,
+    name: ext.negocio.nombre,
+    alternateName: ['Calaguala Camp', 'calagualacamp.com'],
+    url: `${SITE_URL}/`,
+    inLanguage: 'es-UY',
+  };
   const grafo = preguntas.length
     ? [
+        sitio,
         data,
         {
           '@context': 'https://schema.org',
@@ -71,7 +82,7 @@ export function JsonLd({
           })),
         },
       ]
-    : data;
+    : [sitio, data];
   return (
     <script
       type="application/ld+json"
